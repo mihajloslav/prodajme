@@ -1,0 +1,96 @@
+.page {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.authCard {
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  padding: 1rem;
+  background: var(--color-white);
+}
+
+.heading {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tab {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.65rem 0.3rem;
+  border-bottom: 2px solid transparent;
+}
+
+.tabActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.form {
+  display: grid;
+  gap: 0.42rem;
+  margin-top: 0.9rem;
+}
+
+.label {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #425469;
+}
+
+.form input,
+.mockField {
+  border-radius: 0.4rem;
+  border: 1px solid var(--color-border);
+  padding: 0.56rem 0.65rem;
+  font-size: 0.87rem;
+  color: #2b3a4f;
+  background: #fff;
+}
+
+.utilityRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.rememberMe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: #4e5f75;
+}
+
+.linkAction {
+  border: none;
+  background: transparent;
+  color: #5f7897;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0;
+}
+
+.primaryButton {
+  width: 100%;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.58rem 0.8rem;
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-primary);
+}

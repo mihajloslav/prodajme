@@ -1,0 +1,134 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 190px minmax(400px, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-white);
+  border-bottom: 1px solid #e9edf3;
+}
+
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logoMark {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.55rem;
+  display: grid;
+  place-items: center;
+  color: var(--color-white);
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--color-primary);
+}
+
+.logoText {
+  font-size: 1.05rem;
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  letter-spacing: 0.01em;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #dce3ec;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.searchInput {
+  width: 100%;
+  border: none;
+  padding: 0.62rem 0.82rem;
+  font-size: 0.9rem;
+  background: var(--color-white);
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.regionSelect {
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  padding: 0.62rem 0.7rem;
+  background: var(--color-white);
+  color: #1d2b3d;
+  font-size: 0.84rem;
+}
+
+.regionSelect:focus {
+  outline: none;
+}
+
+.searchButton {
+  border: none;
+  border-left: 1px solid #d9e1eb;
+  border-radius: 0;
+  padding: 0.62rem 1.05rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-primary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ghostButton,
+.primaryButton {
+  border-radius: 0.45rem;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ghostButton {
+  color: #495971;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.primaryButton {
+  color: var(--color-white);
+  background: var(--color-primary);
+  border: 1px solid transparent;
+}
+
+@media (max-width: 1080px) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+
+  .searchForm {
+    gap: 0.45rem;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .searchInput,
+  .regionSelect,
+  .searchButton {
+    border: 1px solid #dce3ec;
+    border-radius: 0.45rem;
+  }
+}
