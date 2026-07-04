@@ -6,4 +6,6 @@ import rs.ac.bg.fon.prodajme.entity.Purchase;
 public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
 
 	boolean existsByProductId(Integer productId);
+
+	void deleteByProductId(Integer productId);
 }

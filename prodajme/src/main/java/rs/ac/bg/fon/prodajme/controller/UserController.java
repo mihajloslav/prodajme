@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseFactory.success("Users fetched successfully", Map.of("users", users)));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Integer id) {
         UserDto user = UserMapper.toDto(userService.findById(id));
         return ResponseEntity.ok(ApiResponseFactory.success("User fetched successfully", Map.of("user", user)));
@@ -94,7 +94,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseFactory.success("Password reset successfully"));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         UserDto updatedUser = UserMapper.toDto(
             userService.update(id, UserMapper.toEntity(userDto), userDto.getCity().getId())
@@ -103,7 +103,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseFactory.success("User updated successfully", Map.of("user", updatedUser)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {
         userService.delete(id);
         return ResponseEntity.ok(ApiResponseFactory.success("User deleted successfully"));

@@ -12,7 +12,6 @@ import rs.ac.bg.fon.prodajme.repository.ProductImageRepository;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.service.ProductImageService;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
