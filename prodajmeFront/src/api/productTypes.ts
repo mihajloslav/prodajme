@@ -8,6 +8,11 @@ export interface ProductCategory {
   name: string
 }
 
+export interface City {
+  id: number
+  name: string
+}
+
 export interface ProductUser {
   id: number
   name?: string
@@ -18,6 +23,7 @@ export interface ProductUser {
   email?: string
   username?: string
   role?: string
+  city?: City | string
 }
 
 export interface Product {

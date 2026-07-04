@@ -16,6 +16,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage'
 import PurchasesPage from './pages/PurchasesPage/PurchasesPage'
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
+import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage'
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage'
 
 function App() {
@@ -50,6 +51,14 @@ function App() {
         element={
           <Layout categories={categories}>
             <CategoryProductsPage categories={categories} />
+          </Layout>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <Layout categories={categories}>
+            <SearchResultsPage />
           </Layout>
         }
       />

@@ -1,21 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axiosClient from '../../api/axiosClient'
 import { extractProducts } from '../../api/productTypes'
 import type { Product, ProductCategory } from '../../api/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import { sortProducts, type ProductSortOrder } from '../../utils/productList'
 import styles from './HomePage.module.css'
 
 interface HomePageProps {
   categories: ProductCategory[]
 }
 
+const INITIAL_VISIBLE_COUNT = 8
+
 function HomePage({ categories }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const location = useLocation()
-  const query = (location.state as { query?: string } | null)?.query?.toLowerCase() ?? ''
+  const [sortOrder, setSortOrder] = useState<ProductSortOrder>('newest')
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -34,16 +37,13 @@ function HomePage({ categories }: HomePageProps) {
     void loadProducts()
   }, [])
 
-  const visibleProducts = useMemo(() => {
-    if (!query) {
-      return products
-    }
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT)
+  }, [sortOrder])
 
-    return products.filter((product) => {
-      const source = `${product.title} ${product.description} ${product.category?.name ?? ''}`.toLowerCase()
-      return source.includes(query)
-    })
-  }, [products, query])
+  const sortedProducts = useMemo(() => sortProducts(products, sortOrder), [products, sortOrder])
+  const visibleProducts = useMemo(() => sortedProducts.slice(0, visibleCount), [sortedProducts, visibleCount])
+  const hasMoreProducts = visibleCount < sortedProducts.length
 
   const popularCategories = useMemo(() => {
     return categories.slice(0, 6).map((category) => {
@@ -56,8 +56,6 @@ function HomePage({ categories }: HomePageProps) {
       }
     })
   }, [categories, products])
-
-  const featuredProducts = visibleProducts.slice(0, 5)
 
   return (
     <div className={styles.page}>
@@ -101,23 +99,24 @@ function HomePage({ categories }: HomePageProps) {
         </div>
       </section>
 
-      {!loading && !error && featuredProducts.length > 0 && (
-        <section className={styles.featuredSection}>
-          <div className={styles.sectionHeader}>
-            <h2>Izdvojeni oglasi</h2>
-          </div>
-          <div className={styles.featuredRow}>
-            {featuredProducts.map((product) => (
-              <ProductCard key={`featured-${product.id}`} product={product} />
-            ))}
-          </div>
-        </section>
-      )}
-
       <section className={styles.productsSection}>
         <div className={styles.sectionHeader}>
           <h2>Najnoviji oglasi</h2>
-          <p>{visibleProducts.length} rezultata</p>
+          <div className={styles.sectionHeaderActions}>
+            <label className={styles.sortControl}>
+              <span>Sortiraj</span>
+              <select
+                value={sortOrder}
+                onChange={(event) => setSortOrder(event.target.value as ProductSortOrder)}
+                className={styles.sortSelect}
+              >
+                <option value="newest">Najnovije</option>
+                <option value="priceAsc">Cena rastuće</option>
+                <option value="priceDesc">Cena opadajuće</option>
+              </select>
+            </label>
+            <p>{sortedProducts.length} rezultata</p>
+          </div>
         </div>
 
         {loading && <p className={styles.stateText}>Učitavanje oglasa...</p>}
@@ -131,8 +130,20 @@ function HomePage({ categories }: HomePageProps) {
           </div>
         )}
 
-        {!loading && !error && visibleProducts.length === 0 && (
-          <p className={styles.stateText}>Nema oglasa za zadatu pretragu.</p>
+        {!loading && !error && sortedProducts.length === 0 && (
+          <p className={styles.stateText}>Nema oglasa trenutno.</p>
+        )}
+
+        {!loading && !error && hasMoreProducts && (
+          <div className={styles.loadMoreWrapper}>
+            <button
+              type="button"
+              className={styles.loadMoreButton}
+              onClick={() => setVisibleCount((currentCount) => currentCount + INITIAL_VISIBLE_COUNT)}
+            >
+              Učitaj još
+            </button>
+          </div>
         )}
       </section>
     </div>

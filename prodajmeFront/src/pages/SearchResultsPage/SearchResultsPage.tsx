@@ -1,95 +1,66 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import axiosClient from '../../api/axiosClient'
-import { getCategories } from '../../api/categoriesApi'
 import { extractProducts } from '../../api/productTypes'
-import type { Product, ProductCategory } from '../../api/productTypes'
+import type { Product } from '../../api/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import { sortProducts, type ProductSortOrder } from '../../utils/productList'
-import styles from './CategoryProductsPage.module.css'
-
-interface CategoryProductsPageProps {
-  categories: ProductCategory[]
-}
+import styles from '../CategoryProductsPage/CategoryProductsPage.module.css'
 
 const INITIAL_VISIBLE_COUNT = 8
 
-function CategoryProductsPage({ categories }: CategoryProductsPageProps) {
-  const { categoryId } = useParams()
-  const parsedCategoryId = Number(categoryId)
-
+function SearchResultsPage() {
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const [products, setProducts] = useState<Product[]>([])
-  const [resolvedCategories, setResolvedCategories] = useState<ProductCategory[]>(categories)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [sortOrder, setSortOrder] = useState<ProductSortOrder>('newest')
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
 
+  const searchTerm = searchParams.get('title')?.trim() ?? ''
+
   useEffect(() => {
+    if (!searchTerm) {
+      navigate('/', { replace: true })
+      return
+    }
+
     const loadProducts = async () => {
       try {
         setLoading(true)
         setError('')
-        const response = await axiosClient.get('/api/products')
+        const response = await axiosClient.get('/api/products/search', {
+          params: { title: searchTerm },
+        })
         setProducts(extractProducts(response.data))
       } catch {
-        setError('Došlo je do greške pri učitavanju oglasa. Pokušajte ponovo kasnije.')
+        setError('Došlo je do greške pri pretrazi oglasa. Pokušajte ponovo kasnije.')
       } finally {
         setLoading(false)
       }
     }
 
     void loadProducts()
-  }, [])
-
-  useEffect(() => {
-    const loadCategories = async () => {
-      if (categories.length > 0) {
-        setResolvedCategories(categories)
-        return
-      }
-
-      try {
-        const fetchedCategories = await getCategories()
-        setResolvedCategories(fetchedCategories)
-      } catch {
-        setResolvedCategories([])
-      }
-    }
-
-    void loadCategories()
-  }, [categories])
+  }, [navigate, searchTerm])
 
   useEffect(() => {
     setVisibleCount(INITIAL_VISIBLE_COUNT)
-  }, [parsedCategoryId, sortOrder])
+  }, [searchTerm, sortOrder])
 
-  const filteredProducts = useMemo(() => {
-    if (!Number.isFinite(parsedCategoryId)) {
-      return []
-    }
-
-    return products.filter((product) => product.category?.id === parsedCategoryId)
-  }, [products, parsedCategoryId])
-
-  const sortedProducts = useMemo(() => sortProducts(filteredProducts, sortOrder), [filteredProducts, sortOrder])
+  const sortedProducts = useMemo(() => sortProducts(products, sortOrder), [products, sortOrder])
   const visibleProducts = useMemo(() => sortedProducts.slice(0, visibleCount), [sortedProducts, visibleCount])
   const hasMoreProducts = visibleCount < sortedProducts.length
 
-  const categoryName = useMemo(() => {
-    if (!Number.isFinite(parsedCategoryId)) {
-      return 'Nepoznata kategorija'
-    }
-
-    const category = resolvedCategories.find((item) => item.id === parsedCategoryId)
-    return category?.name ?? `Kategorija #${parsedCategoryId}`
-  }, [resolvedCategories, parsedCategoryId])
+  if (!searchTerm) {
+    return null
+  }
 
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <h1>Oglasi iz kategorije: {categoryName}</h1>
+        <div>
+          <h1>Rezultati pretrage za: "{searchTerm}"</h1>
           <p>{sortedProducts.length} rezultata</p>
         </div>
         <label className={styles.sortControl}>
@@ -132,10 +103,10 @@ function CategoryProductsPage({ categories }: CategoryProductsPageProps) {
       )}
 
       {!loading && !error && sortedProducts.length === 0 && (
-        <p className={styles.stateText}>Nema oglasa u ovoj kategoriji.</p>
+        <p className={styles.stateText}>Nema oglasa za traženi pojam.</p>
       )}
     </section>
   )
 }
 
-export default CategoryProductsPage
+export default SearchResultsPage

@@ -162,7 +162,7 @@ function MessagesPage() {
 
       groupedConversations.set(conversationKey, {
         key: conversationKey,
-        product: message.product,
+        product: message.product ?? { id: productId },
         otherUser,
         messages: [message],
         lastMessage: message,

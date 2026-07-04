@@ -11,7 +11,15 @@ function Header() {
 
   const handleSearch = (event: FormEvent) => {
     event.preventDefault()
-    navigate('/', { state: { query: query.trim() } })
+
+    const trimmedQuery = query.trim()
+
+    if (!trimmedQuery) {
+      navigate('/', { replace: true })
+      return
+    }
+
+    navigate(`/search?title=${encodeURIComponent(trimmedQuery)}`, { replace: false })
   }
 
   const handleLogout = () => {
@@ -28,9 +36,8 @@ function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.branding}>
-        <div className={styles.logoMark}>P</div>
-        <Link to="/" className={styles.logoText}>
-          ProdajMe
+        <Link to="/" className={styles.logoLink}>
+          <img src="/prodajmelogo.png" alt="ProdajMe" className={styles.logoImage} />
         </Link>
       </div>
 
@@ -42,9 +49,6 @@ function Header() {
           placeholder="Pretražite proizvode..."
           className={styles.searchInput}
         />
-        <select className={styles.regionSelect} defaultValue="Srbija" aria-label="Region">
-          <option value="Srbija">Srbija</option>
-        </select>
         <button type="submit" className={styles.searchButton}>
           Pretraži
         </button>

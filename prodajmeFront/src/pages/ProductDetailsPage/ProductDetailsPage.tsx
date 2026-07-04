@@ -54,7 +54,11 @@ const extractReview = (payload: Review | ReviewsApiResponse): Review | null => {
     return payload as Review
   }
 
-  return payload?.data?.review ?? null
+  if (payload && !Array.isArray(payload) && 'data' in payload) {
+    return payload.data?.review ?? null
+  }
+
+  return null
 }
 
 function ProductDetailsPage() {
@@ -156,10 +160,43 @@ function ProductDetailsPage() {
   const isSold = statusLabel === 'SOLD'
   const isOwnProduct = Boolean(currentUser?.id && product.user?.id && currentUser.id === product.user.id)
 
-  const sellerName =
-    product.user?.name ||
-    [product.user?.firstName, product.user?.lastName].filter(Boolean).join(' ') ||
-    'Nepoznat prodavac'
+  const sellerName = (() => {
+    if (product.user?.name) {
+      return product.user.name
+    }
+
+    const firstName = product.user?.firstName || ''
+    const lastName = product.user?.lastName || ''
+    const fullName = `${firstName} ${lastName}`.trim()
+
+    return fullName || product.user?.username || 'Nepoznat prodavac'
+  })()
+
+  const cityName = (() => {
+    if (!product.user?.city) {
+      return 'Nije navedeno'
+    }
+
+    if (typeof product.user.city === 'string') {
+      return product.user.city
+    }
+
+    if (typeof product.user.city === 'object') {
+      const city = product.user.city as unknown as Record<string, unknown>
+      // Pokušaj da pronađeš name, title, ili bilo koji string
+      const name = city.name || city.title || city.label || city.cityName
+      if (typeof name === 'string' && name.trim()) {
+        return name
+      }
+      // Ako ništa ne radi, pronađi prvi string u objektu
+      const firstString = Object.values(city).find((v) => typeof v === 'string' && v)
+      if (typeof firstString === 'string') {
+        return firstString
+      }
+    }
+
+    return 'Nije navedeno'
+  })()
 
   const formattedDate = product.datePosted
     ? new Date(product.datePosted).toLocaleString('sr-RS', {
@@ -445,7 +482,7 @@ function ProductDetailsPage() {
               <span>Ime:</span> <strong>{sellerName}</strong>
             </p>
             <p>
-              <span>Email:</span> <strong>{product.user?.email ?? 'N/A'}</strong>
+              <span>Grad:</span> <strong>{cityName}</strong>
             </p>
             <p>
               <span>Telefon:</span> <strong>{product.user?.phone ?? 'N/A'}</strong>

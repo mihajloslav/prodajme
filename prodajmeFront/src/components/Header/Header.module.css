@@ -17,57 +17,39 @@
   gap: 0.6rem;
 }
 
-.logoMark {
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 0.55rem;
-  display: grid;
-  place-items: center;
-  color: var(--color-white);
-  font-size: 0.88rem;
-  font-weight: 700;
-  background: var(--color-primary);
+.logoLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logoText {
-  font-size: 1.05rem;
-  font-family: var(--font-display);
-  color: var(--color-primary);
-  letter-spacing: 0.01em;
+.logoImage {
+  height: 2.2rem;
+  width: auto;
+  object-fit: contain;
 }
 
 .searchForm {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0;
   border: 1px solid #dce3ec;
   border-radius: 0.45rem;
   overflow: hidden;
   background: var(--color-white);
+  height: 2.4rem;
 }
 
 .searchInput {
-  width: 100%;
+  flex: 1;
   border: none;
-  padding: 0.62rem 0.82rem;
+  padding: 0 0.82rem;
   font-size: 0.9rem;
   background: var(--color-white);
+  box-sizing: border-box;
 }
 
 .searchInput:focus {
-  outline: none;
-}
-
-.regionSelect {
-  border: none;
-  border-left: 1px solid #e2e8f0;
-  padding: 0.62rem 0.7rem;
-  background: var(--color-white);
-  color: #1d2b3d;
-  font-size: 0.84rem;
-}
-
-.regionSelect:focus {
   outline: none;
 }
 
@@ -75,11 +57,17 @@
   border: none;
   border-left: 1px solid #d9e1eb;
   border-radius: 0;
-  padding: 0.62rem 1.05rem;
+  padding: 0 1.05rem;
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--color-white);
   background: var(--color-primary);
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .actions {
@@ -148,12 +136,15 @@
     border: none;
     border-radius: 0;
     overflow: visible;
+    height: auto;
+    align-items: flex-end;
   }
 
   .searchInput,
-  .regionSelect,
   .searchButton {
     border: 1px solid #dce3ec;
     border-radius: 0.45rem;
+    padding: 0.55rem 0.7rem;
+    height: auto;
   }
 }
