@@ -1,0 +1,62 @@
+package rs.ac.bg.fon.prodajme.service.impl;
+
+import org.springframework.stereotype.Service;
+import rs.ac.bg.fon.prodajme.entity.Product;
+import rs.ac.bg.fon.prodajme.entity.Purchase;
+import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.repository.ProductRepository;
+import rs.ac.bg.fon.prodajme.repository.PurchaseRepository;
+import rs.ac.bg.fon.prodajme.repository.UserRepository;
+import rs.ac.bg.fon.prodajme.service.PurchaseService;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+public class PurchaseServiceImpl implements PurchaseService {
+
+    private final PurchaseRepository purchaseRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+
+    public PurchaseServiceImpl(PurchaseRepository purchaseRepository,
+                               UserRepository userRepository,
+                               ProductRepository productRepository) {
+        this.purchaseRepository = purchaseRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
+
+    @Override
+    public List<Purchase> findAll() {
+        return purchaseRepository.findAll();
+    }
+
+    @Override
+    public Purchase findById(Integer id) {
+        return purchaseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Purchase not found"));
+    }
+
+    @Override
+    public Purchase createPurchase(Integer buyerId, Integer productId, BigDecimal finalPrice) {
+        User buyer = userRepository.findById(buyerId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (purchaseRepository.existsByProductId(productId)) {
+            throw new RuntimeException("Purchase for product already exists");
+        }
+
+        Purchase purchase = new Purchase();
+        purchase.setBuyer(buyer);
+        purchase.setProduct(product);
+        purchase.setFinalPrice(finalPrice);
+        purchase.setDatePurchased(LocalDateTime.now());
+
+        return purchaseRepository.save(purchase);
+    }
+}

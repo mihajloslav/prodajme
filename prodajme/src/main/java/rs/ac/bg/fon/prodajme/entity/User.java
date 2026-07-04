@@ -22,19 +22,20 @@ import lombok.Setter;
 public class User {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "NAME", nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "surname", nullable = false, length = 50)
     private String surname;
 
-    @Column(length = 16, unique = true)
+    @Column(name = "phone", length = 16, unique = true)
     private String phone;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(name = "username", nullable = false, length = 30, unique = true)
     private String username;
 
     @Column(name = "PASSWORD", nullable = false, length = 255)

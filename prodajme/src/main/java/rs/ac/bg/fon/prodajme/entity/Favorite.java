@@ -1,5 +1,6 @@
 package rs.ac.bg.fon.prodajme.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,11 @@ import java.time.LocalDateTime;
 public class Favorite {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "dateAdded")
     private LocalDateTime dateAdded;
 
     @ManyToOne

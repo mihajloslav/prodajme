@@ -24,15 +24,17 @@ import java.time.LocalDateTime;
 public class Review {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "rating", nullable = false)
     private Integer rating;
 
     @Column(name = "COMMENT", columnDefinition = "TEXT")
     private String comment;
 
+    @Column(name = "dateCreated")
     private LocalDateTime dateCreated;
 
     @ManyToOne

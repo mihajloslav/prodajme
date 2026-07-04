@@ -24,12 +24,14 @@ import java.time.LocalDateTime;
 public class Message {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "TEXT", nullable = false, columnDefinition = "TEXT")
     private String text;
 
+    @Column(name = "dateSent")
     private LocalDateTime dateSent;
 
     @ManyToOne

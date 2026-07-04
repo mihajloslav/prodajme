@@ -26,12 +26,14 @@ import java.time.LocalDateTime;
 public class Purchase {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "datePurchased")
     private LocalDateTime datePurchased;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "finalPrice", nullable = false, precision = 10, scale = 2)
     private BigDecimal finalPrice;
 
     @ManyToOne

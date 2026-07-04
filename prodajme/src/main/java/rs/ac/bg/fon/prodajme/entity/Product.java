@@ -25,21 +25,23 @@ import java.time.LocalDateTime;
 public class Product {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
 
     @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(length = 255)
+    @Column(name = "imageUrl", length = 255)
     private String imageUrl;
 
+    @Column(name = "datePosted")
     private LocalDateTime datePosted;
 
     @Column(name = "STATUS", nullable = false, length = 10)
