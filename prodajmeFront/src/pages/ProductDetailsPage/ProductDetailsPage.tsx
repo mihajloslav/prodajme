@@ -161,41 +161,35 @@ function ProductDetailsPage() {
   const isOwnProduct = Boolean(currentUser?.id && product.user?.id && currentUser.id === product.user.id)
 
   const sellerName = (() => {
-    if (product.user?.name) {
-      return product.user.name
+    const user = product.user
+    if (!user) {
+      return 'Nepoznat prodavac'
     }
 
-    const firstName = product.user?.firstName || ''
-    const lastName = product.user?.lastName || ''
-    const fullName = `${firstName} ${lastName}`.trim()
+    const fullName = [user.name, user.surname].filter(Boolean).join(' ').trim()
+    if (fullName) {
+      return fullName
+    }
 
-    return fullName || product.user?.username || 'Nepoznat prodavac'
+    const legacyName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+    if (legacyName) {
+      return legacyName
+    }
+
+    return user.username || 'Nepoznat prodavac'
   })()
 
   const cityName = (() => {
-    if (!product.user?.city) {
+    const city = product.user?.city
+    if (!city) {
       return 'Nije navedeno'
     }
 
-    if (typeof product.user.city === 'string') {
-      return product.user.city
+    if (typeof city === 'string') {
+      return city
     }
 
-    if (typeof product.user.city === 'object') {
-      const city = product.user.city as unknown as Record<string, unknown>
-      // Pokušaj da pronađeš name, title, ili bilo koji string
-      const name = city.name || city.title || city.label || city.cityName
-      if (typeof name === 'string' && name.trim()) {
-        return name
-      }
-      // Ako ništa ne radi, pronađi prvi string u objektu
-      const firstString = Object.values(city).find((v) => typeof v === 'string' && v)
-      if (typeof firstString === 'string') {
-        return firstString
-      }
-    }
-
-    return 'Nije navedeno'
+    return city.name?.trim() || 'Nije navedeno'
   })()
 
   const formattedDate = product.datePosted
