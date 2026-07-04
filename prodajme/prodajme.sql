@@ -23,8 +23,11 @@ CREATE TABLE `user` (
   NAME VARCHAR(50) NOT NULL,
   surname VARCHAR(50) NOT NULL,
   phone VARCHAR(16) UNIQUE,
+  email VARCHAR(100) UNIQUE NOT NULL,
   username VARCHAR(30) UNIQUE NOT NULL,
   PASSWORD VARCHAR(255) NOT NULL,
+  verificationCode VARCHAR(6),
+  enabled BOOLEAN NOT NULL DEFAULT false,
   ROLE VARCHAR(10) NOT NULL COMMENT 'ADMIN ili USER',
   idCity INT NOT NULL
 );
@@ -65,7 +68,7 @@ CREATE TABLE purchase (
 
 CREATE TABLE review (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  rating TINYINT NOT NULL COMMENT '1 do 5',
+  rating INT NOT NULL COMMENT '1 do 5',
   COMMENT TEXT,
   dateCreated DATETIME,
   idReviewer INT NOT NULL,
@@ -138,9 +141,9 @@ INSERT INTO city (id, NAME) VALUES
 (1, 'Beograd'),
 (2, 'Novi Sad');
 
-INSERT INTO `user` (id, NAME, surname, phone, username, PASSWORD, ROLE, idCity) VALUES
-(1, 'Mihajlo', 'Miki', '+38160111222', 'mihajlo1', '123', 'ADMIN', 1),
-(2, 'Petar', 'Petrovic', '+38160333444', 'pera22', '123', 'USER', 2);
+INSERT INTO `user` (id, NAME, surname, phone, email, username, PASSWORD, verificationCode, enabled, ROLE, idCity) VALUES
+(1, 'Mihajlo', 'Miki', '+38160111222', 'mihajlo1@example.com', 'mihajlo1', '123', NULL, true, 'ADMIN', 1),
+(2, 'Petar', 'Petrovic', '+38160333444', 'pera22@example.com', 'pera22', '123', NULL, true, 'USER', 2);
 
 INSERT INTO category (id, NAME) VALUES
 (1, 'Elektronika'),

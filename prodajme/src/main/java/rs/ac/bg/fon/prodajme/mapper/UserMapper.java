@@ -19,6 +19,7 @@ public final class UserMapper {
         dto.setName(entity.getName());
         dto.setSurname(entity.getSurname());
         dto.setPhone(entity.getPhone());
+        dto.setEmail(entity.getEmail());
         dto.setUsername(entity.getUsername());
         dto.setRole(entity.getRole());
 
@@ -37,6 +38,7 @@ public final class UserMapper {
         dto.setName(entity.getName());
         dto.setSurname(entity.getSurname());
         dto.setPhone(entity.getPhone());
+        dto.setEmail(entity.getEmail());
         dto.setUsername(entity.getUsername());
         dto.setRole(entity.getRole());
         dto.setCity(null);
@@ -54,6 +56,7 @@ public final class UserMapper {
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setPhone(dto.getPhone());
+        entity.setEmail(dto.getEmail());
         entity.setUsername(dto.getUsername());
         entity.setRole(dto.getRole());
         return entity;
@@ -68,6 +71,7 @@ public final class UserMapper {
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setPhone(dto.getPhone());
+        entity.setEmail(dto.getEmail());
         entity.setUsername(dto.getUsername());
         entity.setPassword(dto.getPassword());
         entity.setRole(dto.getRole());

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rs.ac.bg.fon.prodajme.dto.LoginDto;
 import rs.ac.bg.fon.prodajme.dto.RegisterDto;
 import rs.ac.bg.fon.prodajme.dto.UserDto;
+import rs.ac.bg.fon.prodajme.dto.VerifyEmailDto;
 import rs.ac.bg.fon.prodajme.mapper.UserMapper;
 import rs.ac.bg.fon.prodajme.response.ApiResponse;
 import rs.ac.bg.fon.prodajme.response.ApiResponseFactory;
@@ -54,6 +56,24 @@ public class UserController {
 
         ApiResponse response = ApiResponseFactory.created("User registered successfully", Map.of("user", savedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto) {
+        UserDto user = UserMapper.toDto(
+            userService.login(loginDto.getEmail(), loginDto.getPassword())
+        );
+
+        return ResponseEntity.ok(ApiResponseFactory.success("User logged in successfully", Map.of("user", user)));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<ApiResponse> verifyEmail(@RequestBody VerifyEmailDto verifyEmailDto) {
+        UserDto user = UserMapper.toDto(
+                userService.verifyEmail(verifyEmailDto.getEmail(), verifyEmailDto.getCode())
+        );
+
+        return ResponseEntity.ok(ApiResponseFactory.success("Email verified successfully", Map.of("user", user)));
     }
 
     @PutMapping("/{id}")

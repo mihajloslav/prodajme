@@ -12,6 +12,10 @@ public interface UserService {
 
     User findByUsername(String username);
 
+    User login(String email, String password);
+
+    User verifyEmail(String email, String code);
+
     User register(User user);
 
     User register(User user, Integer cityId);
