@@ -65,6 +65,15 @@ function Header() {
         {isAuthenticated && (
           <>
             <span className={styles.userName}>{displayName}</span>
+            <Link to="/poruke" className={styles.ghostButton}>
+              Poruke
+            </Link>
+            <Link to="/omiljeni" className={styles.ghostButton}>
+              Omiljeni oglasi
+            </Link>
+            <Link to="/kupovine" className={styles.ghostButton}>
+              Moje kupovine
+            </Link>
             <Link to="/postavi-oglas" className={styles.primaryButton}>
               Postavi oglas
             </Link>

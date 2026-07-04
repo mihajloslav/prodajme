@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axiosClient from '../../api/axiosClient'
 import { useAuth } from '../../context/AuthContext'
@@ -9,11 +10,18 @@ import styles from './ProductDetailsPage.module.css'
 function ProductDetailsPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, currentUser } = useAuth()
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [isFavoriteMarked, setIsFavoriteMarked] = useState(false)
+  const [favoriteFeedback, setFavoriteFeedback] = useState('')
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false)
+  const [messageText, setMessageText] = useState('')
+  const [messageFeedback, setMessageFeedback] = useState('')
+  const [purchaseFeedback, setPurchaseFeedback] = useState('')
+  const [sendingMessage, setSendingMessage] = useState(false)
+  const [isPurchasing, setIsPurchasing] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -66,6 +74,9 @@ function ProductDetailsPage() {
         ? styles.statusReserved
         : styles.statusActive
 
+  const isSold = statusLabel === 'SOLD'
+  const isOwnProduct = Boolean(currentUser?.id && product.user?.id && currentUser.id === product.user.id)
+
   const sellerName =
     product.user?.name ||
     [product.user?.firstName, product.user?.lastName].filter(Boolean).join(' ') ||
@@ -87,16 +98,117 @@ function ProductDetailsPage() {
       return
     }
 
+    setMessageText('')
     setIsMessageModalOpen(true)
   }
 
-  const handleFavoriteToggle = () => {
-    if (!isAuthenticated) {
+  const handleMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!isAuthenticated || !currentUser?.id) {
       navigate('/login')
       return
     }
 
-    setIsFavoriteMarked((previousValue) => !previousValue)
+    const receiverId = product.user?.id
+
+    if (!receiverId) {
+      setMessageFeedback('Primalac poruke nije dostupan.')
+      setIsMessageModalOpen(false)
+      return
+    }
+
+    if (!messageText.trim()) {
+      return
+    }
+
+    try {
+      setSendingMessage(true)
+      await axiosClient.post('/api/messages', {
+        text: messageText.trim(),
+        sender: { id: currentUser.id },
+        receiver: { id: receiverId },
+        product: { id: product.id },
+      })
+      setIsMessageModalOpen(false)
+      setMessageFeedback('Poruka je uspešno poslata.')
+      setMessageText('')
+    } catch {
+      setMessageFeedback('Nismo uspeli da pošaljemo poruku.')
+    } finally {
+      setSendingMessage(false)
+    }
+  }
+
+  const handleFavoriteToggle = async () => {
+    if (!isAuthenticated || !currentUser?.id) {
+      navigate('/login')
+      return
+    }
+
+    if (isFavoriteMarked) {
+      return
+    }
+
+    try {
+      await axiosClient.post('/api/favorites', {
+        user: { id: currentUser.id },
+        product: { id: product.id },
+      })
+      setIsFavoriteMarked(true)
+      setFavoriteFeedback('Oglas je dodat u omiljene.')
+    } catch {
+      setFavoriteFeedback('Nismo uspeli da dodamo oglas u omiljene.')
+    }
+  }
+
+  const handleOpenPurchaseModal = () => {
+    if (!isAuthenticated || !currentUser?.id) {
+      navigate('/login')
+      return
+    }
+
+    if (isOwnProduct) {
+      setPurchaseFeedback('Ne možete kupiti svoj proizvod.')
+      return
+    }
+
+    if (isSold) {
+      return
+    }
+
+    setIsPurchaseModalOpen(true)
+  }
+
+  const handleConfirmPurchase = async () => {
+    if (!currentUser?.id || isSold || isOwnProduct) {
+      return
+    }
+
+    try {
+      setIsPurchasing(true)
+      await axiosClient.post('/api/purchases', {
+        buyer: { id: currentUser.id },
+        product: { id: product.id },
+        finalPrice: product.price,
+      })
+
+      setIsPurchaseModalOpen(false)
+      setPurchaseFeedback('Kupovina je uspešno izvršena.')
+      setProduct((previousProduct) =>
+        previousProduct
+          ? {
+              ...previousProduct,
+              status: 'SOLD',
+            }
+          : previousProduct,
+      )
+    } catch {
+      setPurchaseFeedback('Kupovina nije uspela. Pokušajte ponovo.')
+      setIsPurchaseModalOpen(false)
+    } finally {
+      setIsPurchasing(false)
+    }
   }
 
   return (
@@ -201,6 +313,19 @@ function ProductDetailsPage() {
             </p>
 
             <div className={styles.sideActions}>
+              {isSold ? (
+                <button type="button" className={styles.purchaseDisabledButton} disabled>
+                  Proizvod je prodat
+                </button>
+              ) : isOwnProduct ? (
+                <button type="button" className={styles.purchaseDisabledButton} disabled>
+                  Vaš proizvod
+                </button>
+              ) : (
+                <button type="button" className={styles.purchaseAction} onClick={handleOpenPurchaseModal}>
+                  Kupi proizvod
+                </button>
+              )}
               <button type="button" className={styles.primaryAction} onClick={handleSendMessage}>
                 Pošalji poruku
               </button>
@@ -208,9 +333,13 @@ function ProductDetailsPage() {
                 type="button"
                 className={`${styles.secondaryAction} ${isFavoriteMarked ? styles.secondaryActionActive : ''}`}
                 onClick={handleFavoriteToggle}
+                disabled={isFavoriteMarked}
               >
                 {isFavoriteMarked ? 'U omiljenima' : 'Dodaj u omiljene'}
               </button>
+              {purchaseFeedback && <p className={styles.actionFeedback}>{purchaseFeedback}</p>}
+              {messageFeedback && <p className={styles.actionFeedback}>{messageFeedback}</p>}
+              {favoriteFeedback && <p className={styles.actionFeedback}>{favoriteFeedback}</p>}
             </div>
           </section>
 
@@ -228,10 +357,41 @@ function ProductDetailsPage() {
         <div className={styles.modalOverlay} role="dialog" aria-modal="true">
           <div className={styles.modalCard}>
             <h3>Pošalji poruku</h3>
-            <p>Slanje poruka će uskoro biti dostupno. UI je spreman za backend povezivanje.</p>
-            <button type="button" className={styles.primaryAction} onClick={() => setIsMessageModalOpen(false)}>
-              Zatvori
-            </button>
+            <form onSubmit={handleMessageSubmit} className={styles.messageForm}>
+              <textarea
+                value={messageText}
+                onChange={(event) => setMessageText(event.target.value)}
+                placeholder="Unesite tekst poruke..."
+                rows={5}
+                required
+              />
+
+              <div className={styles.messageActions}>
+                <button type="button" className={styles.secondaryAction} onClick={() => setIsMessageModalOpen(false)}>
+                  Otkaži
+                </button>
+                <button type="submit" className={styles.primaryAction} disabled={sendingMessage || !messageText.trim()}>
+                  {sendingMessage ? 'Slanje...' : 'Pošalji'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isPurchaseModalOpen && (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modalCard}>
+            <h3>Potvrda kupovine</h3>
+            <p>Da li ste sigurni da želite da kupite ovaj proizvod?</p>
+            <div className={styles.messageActions}>
+              <button type="button" className={styles.secondaryAction} onClick={() => setIsPurchaseModalOpen(false)}>
+                Otkaži
+              </button>
+              <button type="button" className={styles.primaryAction} onClick={handleConfirmPurchase} disabled={isPurchasing}>
+                {isPurchasing ? 'Kupovina...' : 'Potvrdi kupovinu'}
+              </button>
+            </div>
           </div>
         </div>
       )}

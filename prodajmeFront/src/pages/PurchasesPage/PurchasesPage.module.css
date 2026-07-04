@@ -1,0 +1,83 @@
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+}
+
+.backLink {
+  border: 1px solid #ccd8e6;
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #2f4359;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.5rem 0.8rem;
+}
+
+.list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item {
+  border: 1px solid #e3e9f0;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 0.8rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.title a {
+  color: var(--color-primary);
+}
+
+.metaRow {
+  margin: 0.48rem 0 0;
+  color: #5b7088;
+  font-size: 0.86rem;
+}
+
+.metaRow span {
+  color: #7a8ca1;
+}
+
+.metaRow strong {
+  color: #2f4359;
+}
+
+.stateText {
+  margin: 0;
+  color: #607489;
+}
+
+.errorText {
+  margin: 0;
+  color: #b22f2f;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

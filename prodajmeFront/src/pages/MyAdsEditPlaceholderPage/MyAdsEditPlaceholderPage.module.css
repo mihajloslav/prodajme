@@ -1,0 +1,177 @@
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  background: #fff;
+  padding: 1.2rem;
+}
+
+.card h1 {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.form {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field span {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #3e5168;
+}
+
+.field input,
+.field textarea,
+.field select {
+  border: 1px solid #d4deea;
+  border-radius: 0.7rem;
+  padding: 0.68rem 0.75rem;
+  background: #fff;
+  font-size: 0.94rem;
+  color: #243447;
+}
+
+.field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.gridRow {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.section {
+  border: 1px solid #dbe5f0;
+  border-radius: 0.8rem;
+  background: #f9fbff;
+  padding: 0.85rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #324a64;
+}
+
+.imagesGrid {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.imageCard {
+  border: 1px solid #d8e2ee;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.inlineDeleteButton {
+  border: 1px solid #d6dfea;
+  border-radius: 0.55rem;
+  margin: 0.55rem;
+  width: calc(100% - 1.1rem);
+  padding: 0.45rem 0.55rem;
+  background: #f5f8fc;
+  color: #334b64;
+  font-size: 0.79rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.secondaryButton {
+  border: 1px solid #c5d3e2;
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #35516f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.backButton,
+.submitButton {
+  border: 1px solid #c5d4e3;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #2f4359;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.55rem 0.8rem;
+}
+
+.submitButton {
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stateText {
+  margin: 0;
+  color: #607489;
+}
+
+.errorText {
+  margin: 0;
+  color: #b22f2f;
+  font-weight: 600;
+}
+
+.successText {
+  margin: 0;
+  color: #1f7a44;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .gridRow {
+    grid-template-columns: 1fr;
+  }
+
+  .actionsRow {
+    flex-direction: column;
+  }
+}

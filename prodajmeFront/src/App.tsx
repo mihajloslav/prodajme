@@ -5,9 +5,14 @@ import type { ProductCategory } from './api/productTypes'
 import Layout from './components/Layout/Layout'
 import { useAuth } from './context/AuthContext'
 import CategoryProductsPage from './pages/CategoryProductsPage/CategoryProductsPage'
+import FavoriteProductsPage from './pages/FavoriteProductsPage/FavoriteProductsPage'
 import HomePage from './pages/HomePage/HomePage'
 import LoginPage from './pages/LoginPage/LoginPage'
+import MessagesPage from './pages/MessagesPage/MessagesPage'
+import MyAdsEditPlaceholderPage from './pages/MyAdsEditPlaceholderPage/MyAdsEditPlaceholderPage'
+import MyAdsPage from './pages/MyAdsPage/MyAdsPage'
 import PostAdPage from './pages/PostAdPage/PostAdPage'
+import PurchasesPage from './pages/PurchasesPage/PurchasesPage'
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage'
@@ -103,9 +108,61 @@ function App() {
       <Route
         path="/moji-oglasi"
         element={
-          <Layout categories={categories}>
-            <PlaceholderPage title="Moji oglasi" />
-          </Layout>
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <MyAdsPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/omiljeni"
+        element={
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <FavoriteProductsPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/poruke"
+        element={
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <MessagesPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/kupovine"
+        element={
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <PurchasesPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/moji-oglasi/:id/izmeni"
+        element={
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <MyAdsEditPlaceholderPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       <Route path="*" element={<Navigate to="/" replace />} />

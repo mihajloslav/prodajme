@@ -152,10 +152,35 @@
   background: var(--color-primary);
 }
 
+.purchaseAction,
+.purchaseDisabledButton {
+  border-radius: 0.5rem;
+  padding: 0.62rem 0.9rem;
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.purchaseAction {
+  border: 1px solid transparent;
+  color: #fff;
+  background: var(--color-accent);
+}
+
+.purchaseDisabledButton {
+  border: 1px solid #e2c3c3;
+  color: #9b4a4a;
+  background: #fff1f1;
+}
+
 .secondaryAction {
   border: 1px solid #d8e1eb;
   color: #2e3c4f;
   background: #fff;
+}
+
+.secondaryAction:disabled {
+  cursor: default;
+  opacity: 0.9;
 }
 
 .secondaryActionActive {
@@ -269,6 +294,13 @@
   gap: 0.5rem;
 }
 
+.actionFeedback {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2f526f;
+}
+
 .safeCard {
   border: 1px solid #e8edf3;
   border-radius: 0.75rem;
@@ -308,6 +340,26 @@
 .modalCard p {
   margin: 0.65rem 0 0.95rem;
   color: #4f6178;
+}
+
+.messageForm {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.messageForm textarea {
+  border: 1px solid #d7e0ea;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #2e3f54;
+  padding: 0.65rem 0.75rem;
+  resize: vertical;
+}
+
+.messageActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
 }
 
 .stateText {
