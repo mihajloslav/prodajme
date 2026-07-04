@@ -13,4 +13,10 @@ public interface UserService {
     User findByUsername(String username);
 
     User register(User user);
+
+    User register(User user, Integer cityId);
+
+    User update(Integer id, User user, Integer cityId);
+
+    void delete(Integer id);
 }
