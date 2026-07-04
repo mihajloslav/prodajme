@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.Purchase;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.exception.BadRequestException;
+import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.repository.PurchaseRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
@@ -37,20 +39,20 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public Purchase findById(Integer id) {
         return purchaseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Purchase not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Purchase not found"));
     }
 
     @Override
     @Transactional
     public Purchase createPurchase(Integer buyerId, Integer productId, BigDecimal finalPrice) {
         User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         if (purchaseRepository.existsByProductId(productId)) {
-            throw new RuntimeException("Purchase for product already exists");
+            throw new BadRequestException("Purchase for product already exists");
         }
 
         Purchase purchase = new Purchase();

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Favorite;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.exception.BadRequestException;
+import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.FavoriteRepository;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
@@ -30,7 +32,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> findByUserId(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         return favoriteRepository.findByUserId(userId);
     }
@@ -38,13 +40,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite addToFavorites(Integer userId, Integer productId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new RuntimeException("Favorite already exists");
+            throw new BadRequestException("Favorite already exists");
         }
 
         Favorite favorite = new Favorite();
@@ -58,7 +60,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void removeFromFavorites(Integer userId, Integer productId) {
         Favorite favorite = favoriteRepository.findByUserIdAndProductId(userId, productId)
-                .orElseThrow(() -> new RuntimeException("Favorite not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
 
         favoriteRepository.delete(favorite);
     }

@@ -42,12 +42,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Integer id) {
-        try {
-            ProductDto product = ProductMapper.toDto(productService.findById(id));
-            return ResponseEntity.ok(ApiResponseFactory.success("Product fetched successfully", Map.of("product", product)));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        ProductDto product = ProductMapper.toDto(productService.findById(id));
+        return ResponseEntity.ok(ApiResponseFactory.success("Product fetched successfully", Map.of("product", product)));
     }
 
     @GetMapping("/status/{status}")
@@ -72,64 +68,36 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDto productDto) {
-        try {
-            ProductDto savedProduct = ProductMapper.toDto(
-                    productService.create(
-                            ProductMapper.toEntity(productDto),
-                            productDto.getUserId(),
-                            productDto.getCategoryId()
-                    )
-            );
+        ProductDto savedProduct = ProductMapper.toDto(
+            productService.create(
+                ProductMapper.toEntity(productDto),
+                productDto.getUserId(),
+                productDto.getCategoryId()
+            )
+        );
 
-            ApiResponse response = ApiResponseFactory.success("Product created successfully", Map.of("product", savedProduct));
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        ApiResponse response = ApiResponseFactory.success("Product created successfully", Map.of("product", savedProduct));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto) {
-        try {
-            ProductDto updatedProduct = ProductMapper.toDto(
-                    productService.update(
-                            id,
-                            ProductMapper.toEntity(productDto),
-                            productDto.getUserId(),
-                            productDto.getCategoryId()
-                    )
-            );
+        ProductDto updatedProduct = ProductMapper.toDto(
+            productService.update(
+                id,
+                ProductMapper.toEntity(productDto),
+                productDto.getUserId(),
+                productDto.getCategoryId()
+            )
+        );
 
-            return ResponseEntity.ok(ApiResponseFactory.success("Product updated successfully", Map.of("product", updatedProduct)));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        return ResponseEntity.ok(ApiResponseFactory.success("Product updated successfully", Map.of("product", updatedProduct)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Integer id) {
-        try {
-            productService.delete(id);
-            return ResponseEntity.ok(ApiResponseFactory.success("Product deleted successfully"));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        productService.delete(id);
+        return ResponseEntity.ok(ApiResponseFactory.success("Product deleted successfully"));
     }
 
-    private ResponseEntity<ApiResponse> handleException(RuntimeException ex) {
-        String message = ex.getMessage() != null ? ex.getMessage() : "Unexpected error";
-
-        if (message.toLowerCase().contains("not found")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponseFactory.error(message, HttpStatus.NOT_FOUND));
-        }
-
-        if (message.toLowerCase().contains("already exists")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponseFactory.error(message, HttpStatus.CONFLICT));
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error(message, HttpStatus.BAD_REQUEST));
-    }
 }

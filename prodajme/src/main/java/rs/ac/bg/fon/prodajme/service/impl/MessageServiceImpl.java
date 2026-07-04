@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Message;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.MessageRepository;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
@@ -30,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findReceivedMessages(Integer receiverId) {
         if (!userRepository.existsById(receiverId)) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         return messageRepository.findByReceiverId(receiverId);
     }
@@ -38,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findSentMessages(Integer senderId) {
         if (!userRepository.existsById(senderId)) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         return messageRepository.findBySenderId(senderId);
     }
@@ -46,13 +47,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message sendMessage(Integer senderId, Integer receiverId, Integer productId, String text) {
         User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         Message message = new Message();
         message.setSender(sender);

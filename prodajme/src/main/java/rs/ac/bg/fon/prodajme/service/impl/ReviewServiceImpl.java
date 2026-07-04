@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.Review;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.exception.BadRequestException;
+import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.repository.ReviewRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
@@ -35,21 +37,25 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> findByProductId(Integer productId) {
         if (!productRepository.existsById(productId)) {
-            throw new RuntimeException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         }
         return reviewRepository.findByProductId(productId);
     }
 
     @Override
     public Review createReview(Integer reviewerId, Integer reviewedId, Integer productId, Integer rating, String comment) {
+        if (rating == null || rating < 1 || rating > 5) {
+            throw new BadRequestException("Rating must be between 1 and 5");
+        }
+
         User reviewer = userRepository.findById(reviewerId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         User reviewed = userRepository.findById(reviewedId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         Review review = new Review();
         review.setReviewer(reviewer);

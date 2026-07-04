@@ -29,65 +29,37 @@ public class MessageController {
 
     @GetMapping("/received/{receiverId}")
     public ResponseEntity<ApiResponse> getReceivedMessages(@PathVariable Integer receiverId) {
-        try {
-            List<MessageDto> messages = messageService.findReceivedMessages(receiverId)
-                    .stream()
-                    .map(MessageMapper::toDto)
-                    .toList();
+        List<MessageDto> messages = messageService.findReceivedMessages(receiverId)
+            .stream()
+            .map(MessageMapper::toDto)
+            .toList();
 
-            return ResponseEntity.ok(ApiResponseFactory.success("Received messages fetched successfully", Map.of("messages", messages)));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        return ResponseEntity.ok(ApiResponseFactory.success("Received messages fetched successfully", Map.of("messages", messages)));
     }
 
     @GetMapping("/sent/{senderId}")
     public ResponseEntity<ApiResponse> getSentMessages(@PathVariable Integer senderId) {
-        try {
-            List<MessageDto> messages = messageService.findSentMessages(senderId)
-                    .stream()
-                    .map(MessageMapper::toDto)
-                    .toList();
+        List<MessageDto> messages = messageService.findSentMessages(senderId)
+            .stream()
+            .map(MessageMapper::toDto)
+            .toList();
 
-            return ResponseEntity.ok(ApiResponseFactory.success("Sent messages fetched successfully", Map.of("messages", messages)));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        return ResponseEntity.ok(ApiResponseFactory.success("Sent messages fetched successfully", Map.of("messages", messages)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse> sendMessage(@RequestBody MessageDto messageDto) {
-        try {
-            MessageDto savedMessage = MessageMapper.toDto(
-                    messageService.sendMessage(
-                            messageDto.getSenderId(),
-                            messageDto.getReceiverId(),
-                            messageDto.getProductId(),
-                            messageDto.getText()
-                    )
-            );
+        MessageDto savedMessage = MessageMapper.toDto(
+            messageService.sendMessage(
+                messageDto.getSenderId(),
+                messageDto.getReceiverId(),
+                messageDto.getProductId(),
+                messageDto.getText()
+            )
+        );
 
-            ApiResponse response = ApiResponseFactory.success("Message sent successfully", Map.of("message", savedMessage));
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        ApiResponse response = ApiResponseFactory.success("Message sent successfully", Map.of("message", savedMessage));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    private ResponseEntity<ApiResponse> handleException(RuntimeException ex) {
-        String message = ex.getMessage() != null ? ex.getMessage() : "Unexpected error";
-
-        if (message.toLowerCase().contains("not found")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponseFactory.error(message, HttpStatus.NOT_FOUND));
-        }
-
-        if (message.toLowerCase().contains("already exists")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponseFactory.error(message, HttpStatus.CONFLICT));
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error(message, HttpStatus.BAD_REQUEST));
-    }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Category;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.CategoryRepository;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
@@ -35,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(Integer id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
@@ -51,11 +52,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product) {
         if (product.getUser() == null || product.getUser().getId() == null) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         if (product.getCategory() == null || product.getCategory().getId() == null) {
-            throw new RuntimeException("Category not found");
+            throw new ResourceNotFoundException("Category not found");
         }
 
         return create(product, product.getUser().getId(), product.getCategory().getId());
@@ -64,10 +65,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product, Integer userId, Integer categoryId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         if (product.getDatePosted() == null) {
             product.setDatePosted(LocalDateTime.now());
@@ -81,11 +82,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product update(Integer id, Product product) {
         if (product.getUser() == null || product.getUser().getId() == null) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         if (product.getCategory() == null || product.getCategory().getId() == null) {
-            throw new RuntimeException("Category not found");
+            throw new ResourceNotFoundException("Category not found");
         }
 
         return update(id, product, product.getUser().getId(), product.getCategory().getId());
@@ -95,9 +96,9 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Integer id, Product product, Integer userId, Integer categoryId) {
         Product existingProduct = findById(id);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         existingProduct.setTitle(product.getTitle());
         existingProduct.setDescription(product.getDescription());
@@ -113,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Integer id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         }
         productRepository.deleteById(id);
     }

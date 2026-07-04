@@ -30,56 +30,28 @@ public class FavoriteController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse> getFavoritesByUserId(@PathVariable Integer userId) {
-        try {
-            List<FavoriteDto> favorites = favoriteService.findByUserId(userId)
-                    .stream()
-                    .map(FavoriteMapper::toDto)
-                    .toList();
+        List<FavoriteDto> favorites = favoriteService.findByUserId(userId)
+            .stream()
+            .map(FavoriteMapper::toDto)
+            .toList();
 
-            return ResponseEntity.ok(ApiResponseFactory.success("Favorites fetched successfully", Map.of("favorites", favorites)));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        return ResponseEntity.ok(ApiResponseFactory.success("Favorites fetched successfully", Map.of("favorites", favorites)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse> addToFavorites(@RequestBody FavoriteDto favoriteDto) {
-        try {
-            FavoriteDto savedFavorite = FavoriteMapper.toDto(
-                    favoriteService.addToFavorites(favoriteDto.getUserId(), favoriteDto.getProductId())
-            );
+        FavoriteDto savedFavorite = FavoriteMapper.toDto(
+            favoriteService.addToFavorites(favoriteDto.getUserId(), favoriteDto.getProductId())
+        );
 
-            ApiResponse response = ApiResponseFactory.success("Product added to favorites", Map.of("favorite", savedFavorite));
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        ApiResponse response = ApiResponseFactory.success("Product added to favorites", Map.of("favorite", savedFavorite));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/user/{userId}/product/{productId}")
     public ResponseEntity<ApiResponse> removeFromFavorites(@PathVariable Integer userId, @PathVariable Integer productId) {
-        try {
-            favoriteService.removeFromFavorites(userId, productId);
-            return ResponseEntity.ok(ApiResponseFactory.success("Product removed from favorites"));
-        } catch (RuntimeException ex) {
-            return handleException(ex);
-        }
+        favoriteService.removeFromFavorites(userId, productId);
+        return ResponseEntity.ok(ApiResponseFactory.success("Product removed from favorites"));
     }
 
-    private ResponseEntity<ApiResponse> handleException(RuntimeException ex) {
-        String message = ex.getMessage() != null ? ex.getMessage() : "Unexpected error";
-
-        if (message.toLowerCase().contains("not found")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponseFactory.error(message, HttpStatus.NOT_FOUND));
-        }
-
-        if (message.toLowerCase().contains("already exists")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponseFactory.error(message, HttpStatus.CONFLICT));
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error(message, HttpStatus.BAD_REQUEST));
-    }
 }
