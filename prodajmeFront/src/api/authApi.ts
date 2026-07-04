@@ -1,5 +1,5 @@
 import axiosClient from './axiosClient'
-import type { AuthUser, City, RegisterPayload, VerifyEmailPayload } from './authTypes'
+import type { AuthUser, City, RegisterPayload, UpdateProfilePayload, VerifyEmailPayload } from './authTypes'
 
 interface LoginPayload {
   email: string
@@ -60,4 +60,25 @@ export const getCities = async (): Promise<City[]> => {
   const response = await axiosClient.get<ApiResponse<{ cities?: City[] }>>('/api/cities')
   const data = unwrapData(response.data, 'Cities response does not contain data')
   return Array.isArray(data.cities) ? data.cities : []
+}
+
+export const updateUserProfile = async (userId: number, payload: UpdateProfilePayload): Promise<AuthUser> => {
+  const response = await axiosClient.put<ApiResponse<{ user?: AuthUser }>>(`/api/users/${userId}`, {
+    name: payload.name,
+    surname: payload.surname,
+    phone: payload.phone,
+    email: payload.email,
+    username: payload.username,
+    role: payload.role,
+    city: { id: payload.cityId },
+  })
+
+  const data = unwrapData(response.data, 'Update response does not contain data')
+  const user = data.user
+
+  if (!user) {
+    throw new Error('Update response does not contain user data')
+  }
+
+  return user
 }

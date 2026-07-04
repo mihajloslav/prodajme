@@ -36,6 +36,9 @@
 }
 
 .ctaButton {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
   border: none;
   border-radius: 0.45rem;
   padding: 0.65rem 1.1rem;
@@ -46,6 +49,9 @@
 }
 
 .linkButton {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
   border: none;
   background: transparent;
   color: var(--color-primary-soft);

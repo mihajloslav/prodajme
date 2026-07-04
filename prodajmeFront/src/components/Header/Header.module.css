@@ -95,6 +95,14 @@
   padding-right: 0.35rem;
 }
 
+.userNameLink {
+  color: inherit;
+}
+
+.userNameLink:hover .userName {
+  color: var(--color-primary);
+}
+
 .ghostButton,
 .primaryButton {
   border-radius: 0.45rem;

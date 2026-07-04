@@ -13,9 +13,37 @@
 }
 
 .imageWrap {
+  position: relative;
   display: block;
   aspect-ratio: 16 / 10;
   background: #eef3f8;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 2;
+  border-radius: 999px;
+  padding: 0.18rem 0.48rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.statusActive {
+  background: #eaf7ef;
+  color: #1f7a41;
+}
+
+.statusReserved {
+  background: #fff6e6;
+  color: #a46315;
+}
+
+.statusSold {
+  background: #fdecec;
+  color: #aa2c2c;
 }
 
 .image {

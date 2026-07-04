@@ -4,8 +4,58 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import axiosClient from '../../api/axiosClient'
 import { useAuth } from '../../context/AuthContext'
 import { extractProduct, formatPrice, resolveImageUrl } from '../../api/productTypes'
-import type { Product } from '../../api/productTypes'
+import type { Product, ProductUser } from '../../api/productTypes'
 import styles from './ProductDetailsPage.module.css'
+
+interface Review {
+  id: number
+  rating: number
+  comment: string
+  dateCreated?: string
+  reviewer?: ProductUser
+  reviewed?: ProductUser
+}
+
+interface ReviewsApiResponse {
+  data?: {
+    reviews?: Review[]
+    review?: Review
+  }
+}
+
+const getUserDisplayName = (user?: ProductUser) => {
+  if (!user) {
+    return 'Nepoznat korisnik'
+  }
+
+  if (user.name) {
+    return user.name
+  }
+
+  const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+  if (fullName) {
+    return fullName
+  }
+
+  return user.email || 'Nepoznat korisnik'
+}
+
+const extractReviews = (payload: Review[] | ReviewsApiResponse): Review[] => {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  const reviews = payload?.data?.reviews
+  return Array.isArray(reviews) ? reviews : []
+}
+
+const extractReview = (payload: Review | ReviewsApiResponse): Review | null => {
+  if (payload && !Array.isArray(payload) && 'id' in payload) {
+    return payload as Review
+  }
+
+  return payload?.data?.review ?? null
+}
 
 function ProductDetailsPage() {
   const { id } = useParams()
@@ -22,6 +72,13 @@ function ProductDetailsPage() {
   const [purchaseFeedback, setPurchaseFeedback] = useState('')
   const [sendingMessage, setSendingMessage] = useState(false)
   const [isPurchasing, setIsPurchasing] = useState(false)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [reviewsLoading, setReviewsLoading] = useState(false)
+  const [reviewsError, setReviewsError] = useState('')
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewComment, setReviewComment] = useState('')
+  const [reviewFeedback, setReviewFeedback] = useState('')
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -44,6 +101,28 @@ function ProductDetailsPage() {
     if (id) {
       void loadProduct()
     }
+  }, [id])
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      if (!id) {
+        return
+      }
+
+      try {
+        setReviewsLoading(true)
+        setReviewsError('')
+        const response = await axiosClient.get(`/api/reviews/product/${id}`)
+        setReviews(extractReviews(response.data))
+      } catch {
+        setReviews([])
+        setReviewsError('Nismo uspeli da učitamo recenzije.')
+      } finally {
+        setReviewsLoading(false)
+      }
+    }
+
+    void loadReviews()
   }, [id])
 
   if (loading) {
@@ -95,6 +174,11 @@ function ProductDetailsPage() {
   const handleSendMessage = () => {
     if (!isAuthenticated) {
       navigate('/login')
+      return
+    }
+
+    if (isOwnProduct) {
+      setMessageFeedback('Ne možete poslati poruku za svoj proizvod.')
       return
     }
 
@@ -211,6 +295,58 @@ function ProductDetailsPage() {
     }
   }
 
+  const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!isAuthenticated || !currentUser?.id) {
+      navigate('/login')
+      return
+    }
+
+    const reviewedId = product.user?.id
+
+    if (!reviewedId) {
+      setReviewFeedback('Korisnik za recenziju nije dostupan.')
+      return
+    }
+
+    if (currentUser.id === reviewedId) {
+      setReviewFeedback('Ne možete ostaviti recenziju za sopstveni oglas.')
+      return
+    }
+
+    if (!reviewComment.trim()) {
+      return
+    }
+
+    try {
+      setIsSubmittingReview(true)
+      setReviewFeedback('')
+
+      const response = await axiosClient.post('/api/reviews', {
+        rating: reviewRating,
+        comment: reviewComment.trim(),
+        reviewer: { id: currentUser.id },
+        reviewed: { id: reviewedId },
+        product: { id: product.id },
+      })
+
+      const createdReview = extractReview(response.data)
+
+      if (createdReview) {
+        setReviews((previous) => [createdReview, ...previous])
+      }
+
+      setReviewComment('')
+      setReviewRating(5)
+      setReviewFeedback('Recenzija je uspešno poslata.')
+    } catch {
+      setReviewFeedback('Nismo uspeli da pošaljemo recenziju.')
+    } finally {
+      setIsSubmittingReview(false)
+    }
+  }
+
   return (
     <section className={styles.page}>
       <h1 className={styles.pageTitle}>Detalj oglasa</h1>
@@ -311,6 +447,9 @@ function ProductDetailsPage() {
             <p>
               <span>Email:</span> <strong>{product.user?.email ?? 'N/A'}</strong>
             </p>
+            <p>
+              <span>Telefon:</span> <strong>{product.user?.phone ?? 'N/A'}</strong>
+            </p>
 
             <div className={styles.sideActions}>
               {isSold ? (
@@ -326,8 +465,8 @@ function ProductDetailsPage() {
                   Kupi proizvod
                 </button>
               )}
-              <button type="button" className={styles.primaryAction} onClick={handleSendMessage}>
-                Pošalji poruku
+              <button type="button" className={styles.primaryAction} onClick={handleSendMessage} disabled={isOwnProduct}>
+                {isOwnProduct ? 'Vaš oglas' : 'Pošalji poruku'}
               </button>
               <button
                 type="button"
@@ -352,6 +491,90 @@ function ProductDetailsPage() {
           </section>
         </aside>
       </div>
+
+      <section className={styles.reviewsSection}>
+        <h2>Recenzije</h2>
+
+        {isAuthenticated ? (
+          isOwnProduct ? (
+            <p className={styles.reviewNotice}>Ne možete ostaviti recenziju za sopstveni oglas.</p>
+          ) : (
+            <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+              <label className={styles.reviewField}>
+                Ocena
+                <select
+                  value={reviewRating}
+                  onChange={(event) => setReviewRating(Number(event.target.value))}
+                  disabled={isSubmittingReview}
+                >
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>5</option>
+                </select>
+              </label>
+
+              <label className={styles.reviewField}>
+                Komentar
+                <textarea
+                  value={reviewComment}
+                  onChange={(event) => setReviewComment(event.target.value)}
+                  rows={4}
+                  placeholder="Napišite komentar..."
+                  required
+                  disabled={isSubmittingReview}
+                />
+              </label>
+
+              <button
+                type="submit"
+                className={styles.primaryAction}
+                disabled={isSubmittingReview || !reviewComment.trim()}
+              >
+                {isSubmittingReview ? 'Slanje...' : 'Ostavi recenziju'}
+              </button>
+            </form>
+          )
+        ) : (
+          <button type="button" className={styles.secondaryAction} onClick={() => navigate('/login')}>
+            Prijavi se da ostaviš recenziju
+          </button>
+        )}
+
+        {reviewFeedback && <p className={styles.reviewFeedback}>{reviewFeedback}</p>}
+        {reviewsError && <p className={styles.errorText}>{reviewsError}</p>}
+        {reviewsLoading && <p className={styles.stateText}>Učitavanje recenzija...</p>}
+
+        {!reviewsLoading && !reviewsError && reviews.length === 0 && (
+          <p className={styles.stateText}>Još nema recenzija za ovaj oglas.</p>
+        )}
+
+        {!reviewsLoading && reviews.length > 0 && (
+          <div className={styles.reviewsList}>
+            {reviews.map((review) => (
+              <article key={review.id} className={styles.reviewCard}>
+                <p><strong>Ocena:</strong> {review.rating}/5</p>
+                <p><strong>Komentar:</strong> {review.comment || 'Bez komentara.'}</p>
+                <p><strong>Ostavio:</strong> {getUserDisplayName(review.reviewer)}</p>
+                <p><strong>Namenjeno:</strong> {getUserDisplayName(review.reviewed)}</p>
+                <p>
+                  <strong>Datum:</strong>{' '}
+                  {review.dateCreated
+                    ? new Date(review.dateCreated).toLocaleString('sr-RS', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : 'N/A'}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
 
       {isMessageModalOpen && (
         <div className={styles.modalOverlay} role="dialog" aria-modal="true">

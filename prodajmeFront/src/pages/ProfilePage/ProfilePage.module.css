@@ -1,0 +1,160 @@
+.page {
+  border: 1px solid #e7ecf2;
+  border-radius: 0.95rem;
+  padding: 1rem;
+  background: var(--color-white);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.header p {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #e8edf3;
+  border-radius: 0.85rem;
+  padding: 0.9rem;
+  background: #fbfcfe;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.infoGrid {
+  margin-top: 0.7rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.infoGrid p {
+  margin: 0;
+  border: 1px solid #e7edf5;
+  border-radius: 0.65rem;
+  background: #fff;
+  padding: 0.55rem 0.62rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.infoGrid span {
+  color: #73859b;
+  font-size: 0.78rem;
+}
+
+.infoGrid strong {
+  color: #253447;
+  font-size: 0.9rem;
+}
+
+.editButton,
+.cancelButton {
+  border-radius: 0.6rem;
+  padding: 0.58rem 0.82rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.editButton {
+  margin-top: 0.72rem;
+  border: 1px solid transparent;
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.cancelButton {
+  border: 1px solid #d7e0ea;
+  color: #2d4057;
+  background: #fff;
+}
+
+.editForm {
+  margin-top: 0.72rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.editForm label {
+  display: grid;
+  gap: 0.3rem;
+  color: #2e3f54;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.editForm input,
+.editForm select {
+  border: 1px solid #d7e0ea;
+  border-radius: 0.6rem;
+  padding: 0.56rem 0.62rem;
+  font: inherit;
+  background: #fff;
+  color: #253447;
+}
+
+.formActions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.feedback {
+  margin: 0.62rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #2f526f;
+}
+
+.linkGrid {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dashboardLink {
+  border: 1px solid #dce4ee;
+  border-radius: 0.62rem;
+  background: #fff;
+  padding: 0.65rem 0.72rem;
+  color: #2a3b50;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dashboardLink:hover {
+  border-color: #b5c7dd;
+  background: #eef4fb;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .editForm {
+    grid-template-columns: 1fr;
+  }
+}

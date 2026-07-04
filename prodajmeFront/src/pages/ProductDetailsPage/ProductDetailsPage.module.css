@@ -152,6 +152,13 @@
   background: var(--color-primary);
 }
 
+.primaryAction:disabled {
+  border-color: #d4dde8;
+  background: #e7edf5;
+  color: #7f8fa3;
+  cursor: not-allowed;
+}
+
 .purchaseAction,
 .purchaseDisabledButton {
   border-radius: 0.5rem;
@@ -370,6 +377,79 @@
 .errorText {
   margin: 0;
   color: #bf2d17;
+}
+
+.reviewsSection {
+  margin-top: 1rem;
+  border: 1px solid #e9edf3;
+  border-radius: 0.85rem;
+  padding: 0.9rem;
+  background: #fff;
+}
+
+.reviewsSection h2 {
+  margin: 0 0 0.7rem;
+  font-size: 1.05rem;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.reviewField {
+  display: grid;
+  gap: 0.35rem;
+  color: #2d3f54;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.reviewField select,
+.reviewField textarea {
+  border: 1px solid #d7e0ea;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #2e3f54;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+}
+
+.reviewField textarea {
+  resize: vertical;
+}
+
+.reviewFeedback {
+  margin: 0.75rem 0 0;
+  font-size: 0.86rem;
+  color: #2f526f;
+  font-weight: 600;
+}
+
+.reviewNotice {
+  margin: 0 0 0.7rem;
+  color: #8a4b4b;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.reviewsList {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.reviewCard {
+  border: 1px solid #e6ebf2;
+  border-radius: 0.7rem;
+  background: #fbfcfe;
+  padding: 0.65rem 0.75rem;
+}
+
+.reviewCard p {
+  margin: 0.22rem 0;
+  color: #33465c;
+  font-size: 0.88rem;
 }
 
 @media (max-width: 900px) {

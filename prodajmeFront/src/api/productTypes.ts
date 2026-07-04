@@ -13,7 +13,11 @@ export interface ProductUser {
   name?: string
   firstName?: string
   lastName?: string
+  surname?: string
+  phone?: string
   email?: string
+  username?: string
+  role?: string
 }
 
 export interface Product {
@@ -35,32 +39,56 @@ interface ApiResponse<TData> {
   data?: TData
 }
 
-export const extractProducts = (payload: Product[] | ApiResponse<{ products?: Product[] }>): Product[] => {
+const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const isProduct = (value: unknown): value is Product =>
+  isObjectRecord(value) && typeof value.id === 'number'
+
+const isProductApiResponse = (value: unknown): value is ApiResponse<{ product?: Product }> =>
+  isObjectRecord(value) && Object.prototype.hasOwnProperty.call(value, 'data')
+
+const isProductsApiResponse = (value: unknown): value is ApiResponse<{ products?: Product[] }> =>
+  isObjectRecord(value) && Object.prototype.hasOwnProperty.call(value, 'data')
+
+const isCategoriesApiResponse = (value: unknown): value is ApiResponse<{ categories?: ProductCategory[] }> =>
+  isObjectRecord(value) && Object.prototype.hasOwnProperty.call(value, 'data')
+
+export function extractProducts(payload: unknown): Product[] {
   if (Array.isArray(payload)) {
     return payload
   }
 
-  const products = payload?.data?.products
+  if (!isProductsApiResponse(payload)) {
+    return []
+  }
+
+  const products = payload.data?.products
   return Array.isArray(products) ? products : []
 }
 
-export const extractProduct = (payload: Product | ApiResponse<{ product?: Product }>): Product | null => {
-  if (payload && !Array.isArray(payload) && 'id' in payload) {
-    return payload as Product
+export function extractProduct(payload: unknown): Product | null {
+  if (isProductApiResponse(payload)) {
+    return payload.data?.product ?? null
   }
 
-  const product = payload?.data?.product
-  return product ?? null
+  if (isProduct(payload)) {
+    return payload
+  }
+
+  return null
 }
 
-export const extractCategories = (
-  payload: ProductCategory[] | ApiResponse<{ categories?: ProductCategory[] }>,
-): ProductCategory[] => {
+export function extractCategories(payload: unknown): ProductCategory[] {
   if (Array.isArray(payload)) {
     return payload
   }
 
-  const categories = payload?.data?.categories
+  if (!isCategoriesApiResponse(payload)) {
+    return []
+  }
+
+  const categories = payload.data?.categories
   return Array.isArray(categories) ? categories : []
 }
 

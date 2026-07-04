@@ -10,6 +10,20 @@ interface ProductCardProps {
 
 function ProductCard({ product }: ProductCardProps) {
   const firstImage = product.images?.[0]?.imageUrl
+  const normalizedStatus = (product.status || '').toUpperCase()
+  const statusLabel =
+    normalizedStatus === 'SOLD'
+      ? 'PRODAT'
+      : normalizedStatus === 'RESERVED'
+        ? 'REZERVISAN'
+        : 'AKTIVAN'
+
+  const statusClassName =
+    normalizedStatus === 'SOLD'
+      ? styles.statusSold
+      : normalizedStatus === 'RESERVED'
+        ? styles.statusReserved
+        : styles.statusActive
 
   const handleImageError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
     if (event.currentTarget.dataset.fallbackApplied === 'true') {
@@ -23,6 +37,7 @@ function ProductCard({ product }: ProductCardProps) {
   return (
     <article className={styles.card}>
       <Link to={`/products/${product.id}`} className={styles.imageWrap}>
+        <span className={`${styles.statusBadge} ${statusClassName}`}>{statusLabel}</span>
         <img
           src={resolveImageUrl(firstImage)}
           alt={product.title}

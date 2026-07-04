@@ -12,19 +12,11 @@ import MessagesPage from './pages/MessagesPage/MessagesPage'
 import MyAdsEditPlaceholderPage from './pages/MyAdsEditPlaceholderPage/MyAdsEditPlaceholderPage'
 import MyAdsPage from './pages/MyAdsPage/MyAdsPage'
 import PostAdPage from './pages/PostAdPage/PostAdPage'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
 import PurchasesPage from './pages/PurchasesPage/PurchasesPage'
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage'
-
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <section>
-      <h1>{title}</h1>
-      <p>Stranica je pripremljena i biće povezana u sledećem koraku.</p>
-    </section>
-  )
-}
 
 function App() {
   const [categories, setCategories] = useState<ProductCategory[]>([])
@@ -147,6 +139,18 @@ function App() {
           isAuthenticated ? (
             <Layout categories={categories}>
               <PurchasesPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/profil"
+        element={
+          isAuthenticated ? (
+            <Layout categories={categories}>
+              <ProfilePage />
             </Layout>
           ) : (
             <Navigate to="/login" replace />

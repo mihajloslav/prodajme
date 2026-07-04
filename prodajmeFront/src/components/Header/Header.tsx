@@ -64,7 +64,9 @@ function Header() {
 
         {isAuthenticated && (
           <>
-            <span className={styles.userName}>{displayName}</span>
+            <Link to="/profil" className={styles.userNameLink}>
+              <span className={styles.userName}>{displayName}</span>
+            </Link>
             <Link to="/poruke" className={styles.ghostButton}>
               Poruke
             </Link>

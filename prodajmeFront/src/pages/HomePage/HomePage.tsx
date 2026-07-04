@@ -66,12 +66,12 @@ function HomePage({ categories }: HomePageProps) {
           <h1 className={styles.title}>Pronađi nešto što ti treba.</h1>
           <p className={styles.subtitle}>Brzo, jednostavno, besplatno.</p>
           <div className={styles.heroActions}>
-            <button type="button" className={styles.ctaButton}>
+            <Link to="/postavi-oglas" className={styles.ctaButton}>
               Postavite oglas
-            </button>
-            <button type="button" className={styles.linkButton}>
+            </Link>
+            <Link to="/register" className={styles.linkButton}>
               Kako funkcioniše?
-            </button>
+            </Link>
           </div>
         </div>
 
