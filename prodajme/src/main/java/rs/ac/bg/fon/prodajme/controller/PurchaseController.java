@@ -47,8 +47,8 @@ public class PurchaseController {
     public ResponseEntity<ApiResponse> createPurchase(@RequestBody PurchaseDto purchaseDto) {
         PurchaseDto savedPurchase = PurchaseMapper.toDto(
             purchaseService.createPurchase(
-                purchaseDto.getBuyerId(),
-                purchaseDto.getProductId(),
+                purchaseDto.getBuyer().getId(),
+                purchaseDto.getProduct().getId(),
                 purchaseDto.getFinalPrice()
             )
         );

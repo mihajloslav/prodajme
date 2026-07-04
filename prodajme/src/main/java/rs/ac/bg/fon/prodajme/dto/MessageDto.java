@@ -16,10 +16,7 @@ public class MessageDto {
     private Integer id;
     private String text;
     private LocalDateTime dateSent;
-    private Integer senderId;
-    private String senderUsername;
-    private Integer receiverId;
-    private String receiverUsername;
-    private Integer productId;
-    private String productTitle;
+    private UserDto sender;
+    private UserDto receiver;
+    private ProductDto product;
 }

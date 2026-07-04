@@ -17,15 +17,8 @@ public final class FavoriteMapper {
         dto.setId(entity.getId());
         dto.setDateAdded(entity.getDateAdded());
 
-        if (entity.getUser() != null) {
-            dto.setUserId(entity.getUser().getId());
-            dto.setUsername(entity.getUser().getUsername());
-        }
-
-        if (entity.getProduct() != null) {
-            dto.setProductId(entity.getProduct().getId());
-            dto.setProductTitle(entity.getProduct().getTitle());
-        }
+        dto.setUser(UserMapper.toNestedDto(entity.getUser()));
+        dto.setProduct(ProductMapper.toNestedDto(entity.getProduct()));
 
         return dto;
     }

@@ -18,15 +18,8 @@ public final class PurchaseMapper {
         dto.setDatePurchased(entity.getDatePurchased());
         dto.setFinalPrice(entity.getFinalPrice());
 
-        if (entity.getBuyer() != null) {
-            dto.setBuyerId(entity.getBuyer().getId());
-            dto.setBuyerUsername(entity.getBuyer().getUsername());
-        }
-
-        if (entity.getProduct() != null) {
-            dto.setProductId(entity.getProduct().getId());
-            dto.setProductTitle(entity.getProduct().getTitle());
-        }
+        dto.setBuyer(UserMapper.toNestedDto(entity.getBuyer()));
+        dto.setProduct(ProductMapper.toNestedDto(entity.getProduct()));
 
         return dto;
     }

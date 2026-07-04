@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class RegisterDto {
 
-    private Integer id;
     private String name;
     private String surname;
     private String phone;
     private String username;
+    private String password;
     private String role;
-    private CityDto city;
+    private Integer cityId;
 }

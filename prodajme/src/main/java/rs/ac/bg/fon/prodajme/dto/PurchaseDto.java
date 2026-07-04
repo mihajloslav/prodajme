@@ -17,8 +17,6 @@ public class PurchaseDto {
     private Integer id;
     private LocalDateTime datePurchased;
     private BigDecimal finalPrice;
-    private Integer buyerId;
-    private String buyerUsername;
-    private Integer productId;
-    private String productTitle;
+    private UserDto buyer;
+    private ProductDto product;
 }

@@ -18,20 +18,9 @@ public final class MessageMapper {
         dto.setText(entity.getText());
         dto.setDateSent(entity.getDateSent());
 
-        if (entity.getSender() != null) {
-            dto.setSenderId(entity.getSender().getId());
-            dto.setSenderUsername(entity.getSender().getUsername());
-        }
-
-        if (entity.getReceiver() != null) {
-            dto.setReceiverId(entity.getReceiver().getId());
-            dto.setReceiverUsername(entity.getReceiver().getUsername());
-        }
-
-        if (entity.getProduct() != null) {
-            dto.setProductId(entity.getProduct().getId());
-            dto.setProductTitle(entity.getProduct().getTitle());
-        }
+        dto.setSender(UserMapper.toNestedDto(entity.getSender()));
+        dto.setReceiver(UserMapper.toNestedDto(entity.getReceiver()));
+        dto.setProduct(ProductMapper.toNestedDto(entity.getProduct()));
 
         return dto;
     }

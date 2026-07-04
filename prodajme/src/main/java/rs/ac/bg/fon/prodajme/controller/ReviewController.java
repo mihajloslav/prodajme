@@ -51,9 +51,9 @@ public class ReviewController {
     public ResponseEntity<ApiResponse> createReview(@RequestBody ReviewDto reviewDto) {
         ReviewDto savedReview = ReviewMapper.toDto(
             reviewService.createReview(
-                reviewDto.getReviewerId(),
-                reviewDto.getReviewedId(),
-                reviewDto.getProductId(),
+                reviewDto.getReviewer().getId(),
+                reviewDto.getReviewed().getId(),
+                reviewDto.getProduct().getId(),
                 reviewDto.getRating(),
                 reviewDto.getComment()
             )

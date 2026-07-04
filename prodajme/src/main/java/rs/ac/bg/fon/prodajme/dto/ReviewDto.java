@@ -17,10 +17,7 @@ public class ReviewDto {
     private Integer rating;
     private String comment;
     private LocalDateTime dateCreated;
-    private Integer reviewerId;
-    private String reviewerUsername;
-    private Integer reviewedId;
-    private String reviewedUsername;
-    private Integer productId;
-    private String productTitle;
+    private UserDto reviewer;
+    private UserDto reviewed;
+    private ProductDto product;
 }

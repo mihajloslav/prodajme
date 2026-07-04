@@ -41,7 +41,7 @@ public class FavoriteController {
     @PostMapping
     public ResponseEntity<ApiResponse> addToFavorites(@RequestBody FavoriteDto favoriteDto) {
         FavoriteDto savedFavorite = FavoriteMapper.toDto(
-            favoriteService.addToFavorites(favoriteDto.getUserId(), favoriteDto.getProductId())
+            favoriteService.addToFavorites(favoriteDto.getUser().getId(), favoriteDto.getProduct().getId())
         );
 
         ApiResponse response = ApiResponseFactory.created("Product added to favorites", Map.of("favorite", savedFavorite));

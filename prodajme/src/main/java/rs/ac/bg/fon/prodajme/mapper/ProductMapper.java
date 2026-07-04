@@ -22,15 +22,27 @@ public final class ProductMapper {
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
 
-        if (entity.getUser() != null) {
-            dto.setUserId(entity.getUser().getId());
-            dto.setUsername(entity.getUser().getUsername());
+        dto.setUser(UserMapper.toNestedDto(entity.getUser()));
+        dto.setCategory(CategoryMapper.toDto(entity.getCategory()));
+
+        return dto;
+    }
+
+    public static ProductDto toNestedDto(Product entity) {
+        if (entity == null) {
+            return null;
         }
 
-        if (entity.getCategory() != null) {
-            dto.setCategoryId(entity.getCategory().getId());
-            dto.setCategoryName(entity.getCategory().getName());
-        }
+        ProductDto dto = new ProductDto();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setDescription(entity.getDescription());
+        dto.setPrice(entity.getPrice());
+        dto.setImageUrl(entity.getImageUrl());
+        dto.setDatePosted(entity.getDatePosted());
+        dto.setStatus(entity.getStatus());
+        dto.setUser(null);
+        dto.setCategory(null);
 
         return dto;
     }

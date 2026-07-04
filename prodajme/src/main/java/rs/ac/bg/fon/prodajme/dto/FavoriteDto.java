@@ -15,8 +15,6 @@ public class FavoriteDto {
 
     private Integer id;
     private LocalDateTime dateAdded;
-    private Integer userId;
-    private String username;
-    private Integer productId;
-    private String productTitle;
+    private UserDto user;
+    private ProductDto product;
 }

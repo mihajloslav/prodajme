@@ -51,9 +51,9 @@ public class MessageController {
     public ResponseEntity<ApiResponse> sendMessage(@RequestBody MessageDto messageDto) {
         MessageDto savedMessage = MessageMapper.toDto(
             messageService.sendMessage(
-                messageDto.getSenderId(),
-                messageDto.getReceiverId(),
-                messageDto.getProductId(),
+                messageDto.getSender().getId(),
+                messageDto.getReceiver().getId(),
+                messageDto.getProduct().getId(),
                 messageDto.getText()
             )
         );

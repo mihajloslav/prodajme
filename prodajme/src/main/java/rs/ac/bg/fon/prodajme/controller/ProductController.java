@@ -71,8 +71,8 @@ public class ProductController {
         ProductDto savedProduct = ProductMapper.toDto(
             productService.create(
                 ProductMapper.toEntity(productDto),
-                productDto.getUserId(),
-                productDto.getCategoryId()
+                productDto.getUser().getId(),
+                productDto.getCategory().getId()
             )
         );
 
@@ -86,8 +86,8 @@ public class ProductController {
             productService.update(
                 id,
                 ProductMapper.toEntity(productDto),
-                productDto.getUserId(),
-                productDto.getCategoryId()
+                productDto.getUser().getId(),
+                productDto.getCategory().getId()
             )
         );
 

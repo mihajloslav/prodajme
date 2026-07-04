@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rs.ac.bg.fon.prodajme.dto.RegisterDto;
 import rs.ac.bg.fon.prodajme.dto.UserDto;
 import rs.ac.bg.fon.prodajme.mapper.UserMapper;
 import rs.ac.bg.fon.prodajme.response.ApiResponse;
@@ -46,9 +47,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse> registerUser(@RequestBody RegisterDto registerDto) {
         UserDto savedUser = UserMapper.toDto(
-            userService.register(UserMapper.toEntity(userDto), userDto.getCityId())
+            userService.register(UserMapper.toEntity(registerDto), registerDto.getCityId())
         );
 
         ApiResponse response = ApiResponseFactory.created("User registered successfully", Map.of("user", savedUser));
@@ -58,7 +59,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         UserDto updatedUser = UserMapper.toDto(
-            userService.update(id, UserMapper.toEntity(userDto), userDto.getCityId())
+            userService.update(id, UserMapper.toEntity(userDto), userDto.getCity().getId())
         );
 
         return ResponseEntity.ok(ApiResponseFactory.success("User updated successfully", Map.of("user", updatedUser)));

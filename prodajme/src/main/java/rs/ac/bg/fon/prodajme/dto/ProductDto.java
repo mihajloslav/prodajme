@@ -21,8 +21,6 @@ public class ProductDto {
     private String imageUrl;
     private LocalDateTime datePosted;
     private String status;
-    private Integer userId;
-    private String username;
-    private Integer categoryId;
-    private String categoryName;
+    private UserDto user;
+    private CategoryDto category;
 }

@@ -19,20 +19,9 @@ public final class ReviewMapper {
         dto.setComment(entity.getComment());
         dto.setDateCreated(entity.getDateCreated());
 
-        if (entity.getReviewer() != null) {
-            dto.setReviewerId(entity.getReviewer().getId());
-            dto.setReviewerUsername(entity.getReviewer().getUsername());
-        }
-
-        if (entity.getReviewed() != null) {
-            dto.setReviewedId(entity.getReviewed().getId());
-            dto.setReviewedUsername(entity.getReviewed().getUsername());
-        }
-
-        if (entity.getProduct() != null) {
-            dto.setProductId(entity.getProduct().getId());
-            dto.setProductTitle(entity.getProduct().getTitle());
-        }
+        dto.setReviewer(UserMapper.toNestedDto(entity.getReviewer()));
+        dto.setReviewed(UserMapper.toNestedDto(entity.getReviewed()));
+        dto.setProduct(ProductMapper.toNestedDto(entity.getProduct()));
 
         return dto;
     }
