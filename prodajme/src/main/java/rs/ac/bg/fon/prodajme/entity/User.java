@@ -51,6 +51,9 @@ public class User {
     @Column(name = "verificationCode", length = 6)
     private String verificationCode;
 
+    @Column(name = "resetPasswordCode", length = 6)
+    private String resetPasswordCode;
+
     @Column(nullable = false)
     private Boolean enabled = false;
 

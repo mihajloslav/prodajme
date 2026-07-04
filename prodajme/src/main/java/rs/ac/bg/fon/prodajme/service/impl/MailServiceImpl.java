@@ -22,4 +22,13 @@ public class MailServiceImpl implements MailService {
         message.setText("Pozdrav " + name + ",\nVaš verifikacioni kod za ProdajMe je: " + code);
         mailSender.send(message);
     }
+
+    @Override
+    public void sendResetPasswordEmail(String to, String name, String code) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Reset lozinke za ProdajMe");
+        message.setText("Pozdrav " + name + ",\nVaš kod za reset lozinke na platformi ProdajMe je: " + code);
+        mailSender.send(message);
+    }
 }

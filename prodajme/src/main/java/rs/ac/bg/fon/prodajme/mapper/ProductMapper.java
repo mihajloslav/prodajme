@@ -18,7 +18,7 @@ public final class ProductMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
-        dto.setImageUrl(entity.getImageUrl());
+        dto.setImages(entity.getImages().stream().map(ProductImageMapper::toDto).toList());
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
 
@@ -38,7 +38,7 @@ public final class ProductMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
-        dto.setImageUrl(entity.getImageUrl());
+        dto.setImages(entity.getImages().stream().map(ProductImageMapper::toDto).toList());
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
         dto.setUser(null);
@@ -57,7 +57,9 @@ public final class ProductMapper {
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
-        entity.setImageUrl(dto.getImageUrl());
+        if (dto.getImages() != null) {
+            entity.setImages(dto.getImages().stream().map(ProductImageMapper::toEntity).toList());
+        }
         entity.setDatePosted(dto.getDatePosted());
         entity.setStatus(dto.getStatus());
         return entity;

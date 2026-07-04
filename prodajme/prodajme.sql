@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS favorite;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS purchase;
 DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS product_image;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS `user`;
@@ -27,6 +28,7 @@ CREATE TABLE `user` (
   username VARCHAR(30) UNIQUE NOT NULL,
   PASSWORD VARCHAR(255) NOT NULL,
   verificationCode VARCHAR(6),
+  resetPasswordCode VARCHAR(6),
   enabled BOOLEAN NOT NULL DEFAULT false,
   ROLE VARCHAR(10) NOT NULL COMMENT 'ADMIN ili USER',
   idCity INT NOT NULL
@@ -42,11 +44,16 @@ CREATE TABLE product (
   title VARCHAR(100) NOT NULL,
   DESCRIPTION TEXT,
   price DECIMAL(10,2) NOT NULL,
-  imageUrl VARCHAR(255),
   datePosted DATETIME,
   STATUS VARCHAR(10) NOT NULL COMMENT 'ACTIVE, RESERVED, SOLD',
   idUser INT NOT NULL,
   idCategory INT NOT NULL
+);
+
+CREATE TABLE product_image (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  imageUrl VARCHAR(255) NOT NULL,
+  productId INT NOT NULL
 );
 
 CREATE TABLE message (
@@ -97,6 +104,10 @@ ALTER TABLE product
 ADD CONSTRAINT fk_product_category
 FOREIGN KEY (idCategory) REFERENCES category(id);
 
+ALTER TABLE product_image
+ADD CONSTRAINT fk_product_image_product
+FOREIGN KEY (productId) REFERENCES product(id);
+
 ALTER TABLE message
 ADD CONSTRAINT fk_message_sender
 FOREIGN KEY (idSender) REFERENCES `user`(id);
@@ -141,17 +152,23 @@ INSERT INTO city (id, NAME) VALUES
 (1, 'Beograd'),
 (2, 'Novi Sad');
 
-INSERT INTO `user` (id, NAME, surname, phone, email, username, PASSWORD, verificationCode, enabled, ROLE, idCity) VALUES
-(1, 'Mihajlo', 'Miki', '+38160111222', 'mihajlo1@example.com', 'mihajlo1', '123', NULL, true, 'ADMIN', 1),
-(2, 'Petar', 'Petrovic', '+38160333444', 'pera22@example.com', 'pera22', '123', NULL, true, 'USER', 2);
+INSERT INTO `user` (id, NAME, surname, phone, email, username, PASSWORD, verificationCode, resetPasswordCode, enabled, ROLE, idCity) VALUES
+(1, 'Mihajlo', 'Miki', '+38160111222', 'mihajlo1@example.com', 'mihajlo1', '123', NULL, NULL, true, 'ADMIN', 1),
+(2, 'Petar', 'Petrovic', '+38160333444', 'pera22@example.com', 'pera22', '123', NULL, NULL, true, 'USER', 2);
 
 INSERT INTO category (id, NAME) VALUES
 (1, 'Elektronika'),
 (2, 'Nekretnine');
 
-INSERT INTO product (id, title, DESCRIPTION, price, imageUrl, datePosted, STATUS, idUser, idCategory) VALUES
-(1, 'iPhone 15 Pro', 'Polovan telefon u odlicnom stanju.', 950.00, 'iphone.jpg', '2026-06-10 12:00:00', 'SOLD', 2, 1),
-(2, 'Dvosoban stan', 'Stan u centru grada.', 120000.00, 'stan.jpg', '2026-06-15 09:30:00', 'ACTIVE', 1, 2);
+INSERT INTO product (id, title, DESCRIPTION, price, datePosted, STATUS, idUser, idCategory) VALUES
+(1, 'iPhone 15 Pro', 'Polovan telefon u odlicnom stanju.', 950.00, '2026-06-10 12:00:00', 'SOLD', 2, 1),
+(2, 'Dvosoban stan', 'Stan u centru grada.', 120000.00, '2026-06-15 09:30:00', 'ACTIVE', 1, 2);
+
+INSERT INTO product_image (id, imageUrl, productId) VALUES
+(1, 'iphone-front.jpg', 1),
+(2, 'iphone-back.jpg', 1),
+(3, 'stan-dnevna.jpg', 2),
+(4, 'stan-kuhinja.jpg', 2);
 
 INSERT INTO message (id, TEXT, dateSent, idSender, idReceiver, idProduct) VALUES
 (1, 'Koja je zadnja cena za iPhone?', '2026-06-18 10:15:00', 1, 2, 1);

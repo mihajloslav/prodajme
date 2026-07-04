@@ -84,6 +84,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException("User with this email does not exist"));
+
+        String resetPasswordCode = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        user.setResetPasswordCode(resetPasswordCode);
+        userRepository.save(user);
+
+        mailService.sendResetPasswordEmail(user.getEmail(), user.getName(), resetPasswordCode);
+    }
+
+    @Override
+    public void resetPassword(String email, String code, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException("Invalid reset password code"));
+
+        if (user.getResetPasswordCode() == null || !user.getResetPasswordCode().equals(code)) {
+            throw new BadRequestException("Invalid reset password code");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordCode(null);
+        userRepository.save(user);
+    }
+
+    @Override
     public User register(User user) {
         if (user.getCity() == null || user.getCity().getId() == null) {
             throw new ResourceNotFoundException("City not found");

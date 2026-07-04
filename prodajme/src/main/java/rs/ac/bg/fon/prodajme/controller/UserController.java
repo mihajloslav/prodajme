@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rs.ac.bg.fon.prodajme.dto.ForgotPasswordDto;
 import rs.ac.bg.fon.prodajme.dto.LoginDto;
 import rs.ac.bg.fon.prodajme.dto.RegisterDto;
+import rs.ac.bg.fon.prodajme.dto.ResetPasswordDto;
 import rs.ac.bg.fon.prodajme.dto.UserDto;
 import rs.ac.bg.fon.prodajme.dto.VerifyEmailDto;
 import rs.ac.bg.fon.prodajme.mapper.UserMapper;
@@ -74,6 +76,22 @@ public class UserController {
         );
 
         return ResponseEntity.ok(ApiResponseFactory.success("Email verified successfully", Map.of("user", user)));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse> forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
+        userService.forgotPassword(forgotPasswordDto.getEmail());
+        return ResponseEntity.ok(ApiResponseFactory.success("Reset password code sent successfully"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        userService.resetPassword(
+                resetPasswordDto.getEmail(),
+                resetPasswordDto.getCode(),
+                resetPasswordDto.getNewPassword()
+        );
+        return ResponseEntity.ok(ApiResponseFactory.success("Password reset successfully"));
     }
 
     @PutMapping("/{id}")

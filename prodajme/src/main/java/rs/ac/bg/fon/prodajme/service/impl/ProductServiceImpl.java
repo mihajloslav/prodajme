@@ -3,6 +3,7 @@ package rs.ac.bg.fon.prodajme.service.impl;
 import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Category;
 import rs.ac.bg.fon.prodajme.entity.Product;
+import rs.ac.bg.fon.prodajme.entity.ProductImage;
 import rs.ac.bg.fon.prodajme.entity.User;
 import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.CategoryRepository;
@@ -76,6 +77,13 @@ public class ProductServiceImpl implements ProductService {
 
         product.setUser(user);
         product.setCategory(category);
+
+        if (product.getImages() != null) {
+            for (ProductImage image : product.getImages()) {
+                image.setProduct(product);
+            }
+        }
+
         return productRepository.save(product);
     }
 
@@ -103,11 +111,19 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setTitle(product.getTitle());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
-        existingProduct.setImageUrl(product.getImageUrl());
         existingProduct.setDatePosted(product.getDatePosted());
         existingProduct.setStatus(product.getStatus());
         existingProduct.setUser(user);
         existingProduct.setCategory(category);
+
+        existingProduct.getImages().clear();
+        if (product.getImages() != null) {
+            for (ProductImage image : product.getImages()) {
+                image.setProduct(existingProduct);
+                existingProduct.getImages().add(image);
+            }
+        }
+
         return productRepository.save(existingProduct);
     }
 

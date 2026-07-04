@@ -16,6 +16,10 @@ public interface UserService {
 
     User verifyEmail(String email, String code);
 
+    void forgotPassword(String email);
+
+    void resetPassword(String email, String code, String newPassword);
+
     User register(User user);
 
     User register(User user, Integer cityId);
