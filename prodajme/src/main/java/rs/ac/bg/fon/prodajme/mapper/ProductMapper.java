@@ -3,6 +3,8 @@ package rs.ac.bg.fon.prodajme.mapper;
 import rs.ac.bg.fon.prodajme.dto.ProductDto;
 import rs.ac.bg.fon.prodajme.entity.Product;
 
+import java.util.Comparator;
+
 public final class ProductMapper {
 
     private ProductMapper() {
@@ -18,7 +20,10 @@ public final class ProductMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
-        dto.setImages(entity.getImages().stream().map(ProductImageMapper::toDto).toList());
+        dto.setImages(entity.getImages().stream()
+            .sorted(Comparator.comparing(image -> image.getId(), Comparator.nullsLast(Integer::compareTo)))
+            .map(ProductImageMapper::toDto)
+            .toList());
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
 
@@ -38,7 +43,10 @@ public final class ProductMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
-        dto.setImages(entity.getImages().stream().map(ProductImageMapper::toDto).toList());
+        dto.setImages(entity.getImages().stream()
+            .sorted(Comparator.comparing(image -> image.getId(), Comparator.nullsLast(Integer::compareTo)))
+            .map(ProductImageMapper::toDto)
+            .toList());
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
         dto.setUser(null);

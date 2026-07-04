@@ -17,6 +17,8 @@ import java.util.UUID;
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
+    private static final long MAX_FILE_SIZE_BYTES = 5L * 1024 * 1024;
+
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
             "image/jpeg",
             "image/png",
@@ -33,6 +35,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     public String storeProductImage(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new BadRequestException("File is required");
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE_BYTES) {
+            throw new BadRequestException("Image size must be less than 5MB");
         }
 
         String contentType = file.getContentType();
