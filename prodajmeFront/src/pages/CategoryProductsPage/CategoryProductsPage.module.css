@@ -1,0 +1,52 @@
+.page {
+  border: 1px solid #e7ecf2;
+  border-radius: 0.9rem;
+  padding: 1rem;
+  background: var(--color-white);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.1vw, 1.8rem);
+}
+
+.header p {
+  margin: 0;
+  color: #7a8aa0;
+  font-size: 0.9rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.75rem;
+}
+
+.stateText {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.errorText {
+  margin: 0;
+  color: #bf2d17;
+  background: #fff1ef;
+  border: 1px solid #ffd4cb;
+  border-radius: 0.55rem;
+  padding: 0.7rem;
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

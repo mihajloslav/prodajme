@@ -1,33 +1,31 @@
 import { NavLink } from 'react-router-dom'
+import type { ProductCategory } from '../../api/productTypes'
 import styles from './Sidebar.module.css'
 
-const categories = [
-  'Sve kategorije',
-  'Automobili',
-  'Nekretnine',
-  'Tehnika',
-  'Moj dom',
-  'Lične stvari',
-  'Posao',
-  'Sport i hobi',
-  'Poljoprivreda',
-  'Ostalo',
-]
+interface SidebarProps {
+  categories: ProductCategory[]
+}
 
-function Sidebar() {
+function Sidebar({ categories }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
       <p className={styles.sectionTitle}>Kategorije</p>
       <nav className={styles.navigation}>
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
+        >
+          Sve kategorije
+        </NavLink>
+
         {categories.map((category) => (
           <NavLink
-            key={category}
-            to="/"
-            className={({ isActive }) =>
-              `${styles.navLink} ${isActive && category === 'Sve kategorije' ? styles.active : ''}`
-            }
+            key={category.id}
+            to={`/categories/${category.id}`}
+            className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
           >
-            {category}
+            {category.name}
           </NavLink>
         ))}
       </nav>

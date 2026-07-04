@@ -1,3 +1,4 @@
+import type { SyntheticEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { formatPrice, resolveImageUrl } from '../../api/productTypes'
 import type { Product } from '../../api/productTypes'
@@ -10,6 +11,15 @@ interface ProductCardProps {
 function ProductCard({ product }: ProductCardProps) {
   const firstImage = product.images?.[0]?.imageUrl
 
+  const handleImageError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
+    if (event.currentTarget.dataset.fallbackApplied === 'true') {
+      return
+    }
+
+    event.currentTarget.dataset.fallbackApplied = 'true'
+    event.currentTarget.src = '/placeholder-product.svg'
+  }
+
   return (
     <article className={styles.card}>
       <Link to={`/products/${product.id}`} className={styles.imageWrap}>
@@ -18,6 +28,7 @@ function ProductCard({ product }: ProductCardProps) {
           alt={product.title}
           className={styles.image}
           loading="lazy"
+          onError={handleImageError}
         />
       </Link>
 

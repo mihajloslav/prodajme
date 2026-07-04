@@ -31,6 +31,7 @@ export interface Product {
 interface ApiResponse<TData> {
   success?: boolean
   message?: string
+  status?: string
   data?: TData
 }
 
@@ -52,6 +53,17 @@ export const extractProduct = (payload: Product | ApiResponse<{ product?: Produc
   return product ?? null
 }
 
+export const extractCategories = (
+  payload: ProductCategory[] | ApiResponse<{ categories?: ProductCategory[] }>,
+): ProductCategory[] => {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  const categories = payload?.data?.categories
+  return Array.isArray(categories) ? categories : []
+}
+
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('sr-RS', {
     style: 'currency',
@@ -64,9 +76,19 @@ export const resolveImageUrl = (imageUrl?: string) => {
     return '/placeholder-product.svg'
   }
 
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl
+  const normalized = imageUrl.trim()
+
+  if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
+    return normalized
   }
 
-  return `http://localhost:8080${imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`}`
+  if (normalized.startsWith('/uploads')) {
+    return `http://localhost:8080${normalized}`
+  }
+
+  if (normalized.startsWith('/')) {
+    return normalized
+  }
+
+  return `/${normalized}`
 }

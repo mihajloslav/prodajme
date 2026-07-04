@@ -1,9 +1,9 @@
 .page {
-  max-width: 640px;
+  max-width: 520px;
   margin: 0 auto;
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
-  padding: 1.2rem;
+  border-radius: 0.75rem;
+  padding: 1rem;
   background: var(--color-white);
 }
 
@@ -11,8 +11,69 @@
   margin: 0;
 }
 
-.page p {
-  margin-top: 0.8rem;
+.description {
+  margin-top: 0.6rem;
   color: var(--color-text-muted);
-  line-height: 1.6;
+}
+
+.form {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.42rem;
+}
+
+.label {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #425469;
+}
+
+.form input {
+  border-radius: 0.4rem;
+  border: 1px solid var(--color-border);
+  padding: 0.56rem 0.65rem;
+  font-size: 0.87rem;
+  color: #2b3a4f;
+  background: #fff;
+}
+
+.primaryButton {
+  width: 100%;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.58rem 0.8rem;
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-primary);
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.successText {
+  margin: 0.8rem 0 0;
+  color: #1f7a41;
+  font-size: 0.84rem;
+}
+
+.errorText {
+  margin: 0.8rem 0 0;
+  color: #b62828;
+  font-size: 0.84rem;
+}
+
+.loginLink {
+  margin: 0.8rem 0 0;
+  color: #6a7d93;
+  font-size: 0.82rem;
+}
+
+.loginLink a {
+  color: var(--color-primary);
+  font-weight: 700;
 }

@@ -23,6 +23,9 @@
 }
 
 .navLink {
+  display: block;
+  width: 100%;
+  text-align: left;
   border-radius: 0.45rem;
   padding: 0.53rem 0.62rem;
   font-size: 0.88rem;

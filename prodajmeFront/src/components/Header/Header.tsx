@@ -1,16 +1,29 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import styles from './Header.module.css'
 
 function Header() {
   const [query, setQuery] = useState('')
+  const { currentUser, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleSearch = (event: FormEvent) => {
     event.preventDefault()
     navigate('/', { state: { query: query.trim() } })
   }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
+  const displayName =
+    currentUser?.name ||
+    currentUser?.username ||
+    currentUser?.email ||
+    'Korisnik'
 
   return (
     <header className={styles.header}>
@@ -38,12 +51,31 @@ function Header() {
       </form>
 
       <nav className={styles.actions}>
-        <Link to="/login" className={styles.ghostButton}>
-          Prijava
-        </Link>
-        <Link to="/register" className={styles.primaryButton}>
-          Registracija
-        </Link>
+        {!isAuthenticated && (
+          <>
+            <Link to="/login" className={styles.ghostButton}>
+              Prijava
+            </Link>
+            <Link to="/register" className={styles.primaryButton}>
+              Registracija
+            </Link>
+          </>
+        )}
+
+        {isAuthenticated && (
+          <>
+            <span className={styles.userName}>{displayName}</span>
+            <Link to="/postavi-oglas" className={styles.primaryButton}>
+              Postavi oglas
+            </Link>
+            <Link to="/moji-oglasi" className={styles.ghostButton}>
+              Moji oglasi
+            </Link>
+            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+              Odjavi se
+            </button>
+          </>
+        )}
       </nav>
     </header>
   )

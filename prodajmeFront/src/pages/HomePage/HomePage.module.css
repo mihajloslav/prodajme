@@ -134,9 +134,16 @@
 }
 
 .categoryCard {
+  display: block;
   border: 1px solid #e7ecf2;
   border-radius: 0.55rem;
   padding: 0.75rem 0.7rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.categoryCard:hover {
+  border-color: #d3dce7;
+  box-shadow: 0 6px 16px rgba(20, 35, 60, 0.06);
 }
 
 .categoryName {

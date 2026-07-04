@@ -88,6 +88,13 @@
   gap: 0.45rem;
 }
 
+.userName {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #42546a;
+  padding-right: 0.35rem;
+}
+
 .ghostButton,
 .primaryButton {
   border-radius: 0.45rem;
@@ -106,6 +113,16 @@
   color: var(--color-white);
   background: var(--color-primary);
   border: 1px solid transparent;
+}
+
+.logoutButton {
+  border-radius: 0.45rem;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #b62828;
+  background: #fff;
+  border: 1px solid #f0d0d0;
 }
 
 @media (max-width: 1080px) {

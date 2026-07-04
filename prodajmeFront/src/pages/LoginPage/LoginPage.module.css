@@ -94,3 +94,14 @@
   color: var(--color-white);
   background: var(--color-primary);
 }
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.errorText {
+  margin: 0.35rem 0 0;
+  color: #b62828;
+  font-size: 0.82rem;
+}

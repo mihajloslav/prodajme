@@ -1,21 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import axiosClient from '../../api/axiosClient'
 import { extractProducts } from '../../api/productTypes'
-import type { Product } from '../../api/productTypes'
+import type { Product, ProductCategory } from '../../api/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import styles from './HomePage.module.css'
 
-const popularCategories = [
-  { name: 'Automobili', total: '12.345 oglasa' },
-  { name: 'Nekretnine', total: '45.678 oglasa' },
-  { name: 'Tehnika', total: '23.456 oglasa' },
-  { name: 'Moj dom', total: '18.765 oglasa' },
-  { name: 'Sport i hobi', total: '9.876 oglasa' },
-  { name: 'Lične stvari', total: '14.321 oglasa' },
-]
+interface HomePageProps {
+  categories: ProductCategory[]
+}
 
-function HomePage() {
+function HomePage({ categories }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -50,6 +45,18 @@ function HomePage() {
     })
   }, [products, query])
 
+  const popularCategories = useMemo(() => {
+    return categories.slice(0, 6).map((category) => {
+      const total = products.filter((product) => product.category?.id === category.id).length
+
+      return {
+        id: category.id,
+        name: category.name,
+        total,
+      }
+    })
+  }, [categories, products])
+
   const featuredProducts = visibleProducts.slice(0, 5)
 
   return (
@@ -82,10 +89,14 @@ function HomePage() {
         </div>
         <div className={styles.categoryGrid}>
           {popularCategories.map((category) => (
-            <article key={category.name} className={styles.categoryCard}>
+            <Link
+              key={category.id}
+              to={`/categories/${category.id}`}
+              className={styles.categoryCard}
+            >
               <p className={styles.categoryName}>{category.name}</p>
-              <p className={styles.categoryCount}>{category.total}</p>
-            </article>
+              <p className={styles.categoryCount}>{category.total} oglasa</p>
+            </Link>
           ))}
         </div>
       </section>
