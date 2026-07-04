@@ -16,7 +16,11 @@ public interface ProductService {
 
     Product create(Product product);
 
+    Product create(Product product, Integer userId, Integer categoryId);
+
     Product update(Integer id, Product product);
+
+    Product update(Integer id, Product product, Integer userId, Integer categoryId);
 
     void delete(Integer id);
 }

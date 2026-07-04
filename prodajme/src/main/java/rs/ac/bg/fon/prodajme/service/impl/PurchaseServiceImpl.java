@@ -1,5 +1,6 @@
 package rs.ac.bg.fon.prodajme.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.Purchase;
@@ -40,6 +41,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public Purchase createPurchase(Integer buyerId, Integer productId, BigDecimal finalPrice) {
         User buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -57,6 +59,11 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setFinalPrice(finalPrice);
         purchase.setDatePurchased(LocalDateTime.now());
 
-        return purchaseRepository.save(purchase);
+        Purchase savedPurchase = purchaseRepository.save(purchase);
+
+        product.setStatus("SOLD");
+        productRepository.save(product);
+
+        return savedPurchase;
     }
 }

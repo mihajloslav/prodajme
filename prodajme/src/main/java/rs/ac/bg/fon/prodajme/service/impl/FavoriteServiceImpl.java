@@ -29,6 +29,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public List<Favorite> findByUserId(Integer userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found");
+        }
         return favoriteRepository.findByUserId(userId);
     }
 
