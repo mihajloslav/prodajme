@@ -19,7 +19,6 @@ public final class UserMapper {
         dto.setSurname(entity.getSurname());
         dto.setPhone(entity.getPhone());
         dto.setUsername(entity.getUsername());
-        dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
 
         if (entity.getCity() != null) {

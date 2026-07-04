@@ -53,7 +53,7 @@ public class PurchaseController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.success("Purchase created successfully", Map.of("purchase", savedPurchase));
+        ApiResponse response = ApiResponseFactory.created("Purchase created successfully", Map.of("purchase", savedPurchase));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

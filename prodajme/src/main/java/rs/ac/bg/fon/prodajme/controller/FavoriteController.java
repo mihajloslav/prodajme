@@ -44,7 +44,7 @@ public class FavoriteController {
             favoriteService.addToFavorites(favoriteDto.getUserId(), favoriteDto.getProductId())
         );
 
-        ApiResponse response = ApiResponseFactory.success("Product added to favorites", Map.of("favorite", savedFavorite));
+        ApiResponse response = ApiResponseFactory.created("Product added to favorites", Map.of("favorite", savedFavorite));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

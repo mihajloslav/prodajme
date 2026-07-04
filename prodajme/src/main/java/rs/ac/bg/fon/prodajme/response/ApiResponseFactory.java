@@ -17,6 +17,10 @@ public final class ApiResponseFactory {
         return new ApiResponse(message, data, HttpStatus.OK);
     }
 
+    public static ApiResponse created(String message, Map<String, Object> data) {
+        return new ApiResponse(message, data, HttpStatus.CREATED);
+    }
+
     public static ApiResponse error(String message, HttpStatus status) {
         return new ApiResponse(message, status);
     }

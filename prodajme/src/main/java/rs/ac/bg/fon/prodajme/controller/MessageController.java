@@ -58,7 +58,7 @@ public class MessageController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.success("Message sent successfully", Map.of("message", savedMessage));
+        ApiResponse response = ApiResponseFactory.created("Message sent successfully", Map.of("message", savedMessage));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

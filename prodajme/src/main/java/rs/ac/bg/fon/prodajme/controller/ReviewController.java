@@ -59,7 +59,7 @@ public class ReviewController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.success("Review created successfully", Map.of("review", savedReview));
+        ApiResponse response = ApiResponseFactory.created("Review created successfully", Map.of("review", savedReview));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

@@ -51,7 +51,7 @@ public class UserController {
             userService.register(UserMapper.toEntity(userDto), userDto.getCityId())
         );
 
-        ApiResponse response = ApiResponseFactory.success("User registered successfully", Map.of("user", savedUser));
+        ApiResponse response = ApiResponseFactory.created("User registered successfully", Map.of("user", savedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

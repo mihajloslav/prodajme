@@ -76,7 +76,7 @@ public class ProductController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.success("Product created successfully", Map.of("product", savedProduct));
+        ApiResponse response = ApiResponseFactory.created("Product created successfully", Map.of("product", savedProduct));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
