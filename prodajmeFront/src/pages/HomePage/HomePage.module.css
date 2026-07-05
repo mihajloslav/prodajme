@@ -60,51 +60,20 @@
 }
 
 .heroLeft {
+  margin-left: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .heroVisual {
-  position: relative;
+  width: 100%;
+  height: 100%;
   min-height: 180px;
   border-radius: 0.8rem;
-  background: #f8fbff;
-  border: 1px solid #edf2f8;
-  overflow: hidden;
-}
-
-.sofaBack {
-  position: absolute;
-  left: 38%;
-  right: 10%;
-  bottom: 44%;
-  height: 28%;
-  border-radius: 0.8rem;
-  border: 2px solid #89a5c9;
-  background: #e8f0fb;
-}
-
-.sofaSeat {
-  position: absolute;
-  left: 34%;
-  right: 8%;
-  bottom: 20%;
-  height: 32%;
-  border-radius: 0.9rem;
-  border: 2px solid #5a7fa8;
-  background: linear-gradient(180deg, #88a8cb 0%, #6f95bc 100%);
-}
-
-.plant {
-  position: absolute;
-  left: 16%;
-  bottom: 20%;
-  width: 52px;
-  height: 74px;
-  border-radius: 30px 30px 10px 10px;
-  background: linear-gradient(180deg, #dce7f4 0%, #f4f8fd 100%);
-  border: 1px solid #cfdced;
+  /*border: 1px solid #edf2f8;*/
+  object-fit: cover;
+  display: block;
 }
 
 .categorySection,
@@ -146,7 +115,11 @@
 }
 
 .categoryCard {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
   border: 1px solid #e7ecf2;
   border-radius: 0.55rem;
   padding: 0.75rem 0.7rem;
@@ -158,16 +131,23 @@
   box-shadow: 0 6px 16px rgba(20, 35, 60, 0.06);
 }
 
+.categoryIcon {
+  color: #5a7fa8;
+  flex-shrink: 0;
+}
+
 .categoryName {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 700;
+  text-align: center;
 }
 
 .categoryCount {
-  margin: 0.25rem 0 0;
+  margin: 0;
   font-size: 0.78rem;
   color: #7d8ea3;
+  text-align: center;
 }
 
 .grid {

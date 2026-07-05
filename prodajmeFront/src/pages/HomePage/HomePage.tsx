@@ -4,6 +4,7 @@ import axiosClient from '../../api/axiosClient'
 import { extractProducts } from '../../api/productTypes'
 import type { Product, ProductCategory } from '../../api/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import { CategoryIcon } from '../../utils/categoryIcons'
 import { sortProducts, type ProductSortOrder } from '../../utils/productList'
 import styles from './HomePage.module.css'
 
@@ -73,11 +74,7 @@ function HomePage({ categories }: HomePageProps) {
           </div>
         </div>
 
-        <div className={styles.heroVisual} aria-hidden="true">
-          <div className={styles.sofaBack} />
-          <div className={styles.sofaSeat} />
-          <div className={styles.plant} />
-        </div>
+        <img src="/hero.png" alt="" className={styles.heroVisual} />
       </section>
 
       <section className={styles.categorySection}>
@@ -92,6 +89,7 @@ function HomePage({ categories }: HomePageProps) {
               to={`/categories/${category.id}`}
               className={styles.categoryCard}
             >
+              <CategoryIcon categoryName={category.name} size={28} className={styles.categoryIcon} />
               <p className={styles.categoryName}>{category.name}</p>
               <p className={styles.categoryCount}>{category.total} oglasa</p>
             </Link>

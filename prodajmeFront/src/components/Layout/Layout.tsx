@@ -12,7 +12,7 @@ interface LayoutProps {
 function Layout({ children, categories }: LayoutProps) {
   return (
     <div className={styles.shell}>
-      <Header />
+      <Header categories={categories} />
       <div className={styles.body}>
         <Sidebar categories={categories} />
         <main className={styles.content}>{children}</main>

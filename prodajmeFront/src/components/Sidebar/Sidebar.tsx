@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import type { ProductCategory } from '../../api/productTypes'
+import { CategoryIcon } from '../../utils/categoryIcons'
 import styles from './Sidebar.module.css'
 
 interface SidebarProps {
@@ -25,6 +26,7 @@ function Sidebar({ categories }: SidebarProps) {
             to={`/categories/${category.id}`}
             className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
           >
+            <CategoryIcon categoryName={category.name} size={18} className={styles.icon} />
             {category.name}
           </NavLink>
         ))}

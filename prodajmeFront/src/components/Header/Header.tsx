@@ -1,13 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import type { ProductCategory } from '../../api/productTypes'
+import { CategoryIcon } from '../../utils/categoryIcons'
 import styles from './Header.module.css'
 
-function Header() {
+interface HeaderProps {
+  categories: ProductCategory[]
+}
+
+function Header({ categories }: HeaderProps) {
   const [query, setQuery] = useState('')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { currentUser, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : ''
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isMenuOpen])
 
   const handleSearch = (event: FormEvent) => {
     event.preventDefault()
@@ -24,7 +45,12 @@ function Header() {
 
   const handleLogout = () => {
     logout()
+    setIsMenuOpen(false)
     navigate('/')
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
   }
 
   const displayName =
@@ -92,6 +118,85 @@ function Header() {
           </>
         )}
       </nav>
+
+      <button
+        type="button"
+        className={styles.menuButton}
+        aria-label={isMenuOpen ? 'Zatvori meni' : 'Otvori meni'}
+        aria-expanded={isMenuOpen}
+        onClick={() => setIsMenuOpen((open) => !open)}
+      >
+        {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+      {isMenuOpen && (
+        <>
+          <button type="button" className={styles.menuBackdrop} aria-label="Zatvori meni" onClick={closeMenu} />
+          <aside className={styles.mobileMenu}>
+            <div className={styles.menuSection}>
+              <p className={styles.menuSectionTitle}>Kategorije</p>
+              <nav className={styles.menuNav}>
+                <Link to="/" className={styles.menuNavLink} onClick={closeMenu}>
+                  Sve kategorije
+                </Link>
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to={`/categories/${category.id}`}
+                    className={styles.menuNavLink}
+                    onClick={closeMenu}
+                  >
+                    <CategoryIcon categoryName={category.name} size={18} className={styles.menuNavIcon} />
+                    {category.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <div className={styles.menuSection}>
+              <p className={styles.menuSectionTitle}>Nalog</p>
+              <nav className={styles.menuNav}>
+                {!isAuthenticated && (
+                  <>
+                    <Link to="/login" className={styles.menuNavLink} onClick={closeMenu}>
+                      Prijava
+                    </Link>
+                    <Link to="/register" className={styles.menuNavLink} onClick={closeMenu}>
+                      Registracija
+                    </Link>
+                  </>
+                )}
+
+                {isAuthenticated && (
+                  <>
+                    <Link to="/profil" className={styles.menuNavLink} onClick={closeMenu}>
+                      {displayName}
+                    </Link>
+                    <Link to="/poruke" className={styles.menuNavLink} onClick={closeMenu}>
+                      Poruke
+                    </Link>
+                    <Link to="/omiljeni" className={styles.menuNavLink} onClick={closeMenu}>
+                      Omiljeni oglasi
+                    </Link>
+                    <Link to="/kupovine" className={styles.menuNavLink} onClick={closeMenu}>
+                      Moje kupovine
+                    </Link>
+                    <Link to="/postavi-oglas" className={styles.menuNavLink} onClick={closeMenu}>
+                      Postavi oglas
+                    </Link>
+                    <Link to="/moji-oglasi" className={styles.menuNavLink} onClick={closeMenu}>
+                      Moji oglasi
+                    </Link>
+                    <button type="button" className={styles.menuLogoutButton} onClick={handleLogout}>
+                      Odjavi se
+                    </button>
+                  </>
+                )}
+              </nav>
+            </div>
+          </aside>
+        </>
+      )}
     </header>
   )
 }
