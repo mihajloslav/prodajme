@@ -94,27 +94,32 @@ function Header({ categories }: HeaderProps) {
 
         {isAuthenticated && (
           <>
-            <Link to="/profil" className={styles.userNameLink}>
-              <span className={styles.userName}>{displayName}</span>
-            </Link>
-            <Link to="/poruke" className={styles.ghostButton}>
-              Poruke
-            </Link>
-            <Link to="/omiljeni" className={styles.ghostButton}>
-              Omiljeni oglasi
-            </Link>
-            <Link to="/kupovine" className={styles.ghostButton}>
-              Moje kupovine
-            </Link>
-            <Link to="/postavi-oglas" className={styles.primaryButton}>
-              Postavi oglas
-            </Link>
-            <Link to="/moji-oglasi" className={styles.ghostButton}>
-              Moji oglasi
-            </Link>
-            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
-              Odjavi se
-            </button>
+
+            <div className={styles.actionsSecondary}>
+              <Link to="/moji-oglasi" className={styles.ghostButton}>
+                Moji oglasi
+              </Link>
+              <Link to="/poruke" className={styles.ghostButton}>
+                Poruke
+              </Link>
+              <Link to="/omiljeni" className={styles.ghostButton}>
+                Omiljeni oglasi
+              </Link>
+              <Link to="/kupovine" className={styles.ghostButton}>
+                Moje kupovine
+              </Link>
+                          <div className={styles.actionsPrimary}>
+              <Link to="/postavi-oglas" className={styles.primaryButton}>
+                + &nbsp;Postavi oglas
+              </Link>
+              <Link to="/profil" className={styles.primaryButton}>
+                {displayName}
+              </Link>
+            </div>
+              <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+                Odjavi se
+              </button>
+            </div>
           </>
         )}
       </nav>

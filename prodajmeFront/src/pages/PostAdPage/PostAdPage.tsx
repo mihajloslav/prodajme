@@ -147,7 +147,7 @@ function PostAdPage({ categories }: PostAdPageProps) {
     <section className={styles.page}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <p className={styles.eyebrow}>ProdajMe</p>
+           <img src="/prodajmelogo.png" alt="ProdajMe" className={styles.logoImage} />
           <h1>Postavi oglas</h1>
           <p>
             Kreiraj oglas u nekoliko koraka. Grad se automatski preuzima iz tvog korisničkog profila.

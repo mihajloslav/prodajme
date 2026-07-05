@@ -75,22 +75,19 @@
 .actions {
   display: flex;
   align-items: center;
+  gap: 1rem;
+}
+
+.actionsPrimary {
+  display: flex;
+  align-items: center;
   gap: 0.45rem;
 }
 
-.userName {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #42546a;
-  padding-right: 0.35rem;
-}
-
-.userNameLink {
-  color: inherit;
-}
-
-.userNameLink:hover .userName {
-  color: var(--color-primary);
+.actionsSecondary {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .ghostButton,

@@ -62,7 +62,7 @@ function HomePage({ categories }: HomePageProps) {
     <div className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroLeft}>
-          <h1 className={styles.title}>Pronađi nešto što ti treba.</h1>
+          <h1 className={styles.title}>Prodaj nešto što ti ne treba.</h1>
           <p className={styles.subtitle}>Brzo, jednostavno, besplatno.</p>
           <div className={styles.heroActions}>
             <Link to="/postavi-oglas" className={styles.ctaButton}>

@@ -11,6 +11,11 @@
   box-shadow: 0 18px 40px rgba(20, 44, 78, 0.08);
 }
 
+.logoImage {
+  height: 1.2rem;
+  width: auto;
+  object-fit: contain;
+}
 .header h1 {
   margin: 0;
   font-size: clamp(1.5rem, 3vw, 2rem);

@@ -12,13 +12,13 @@ function Sidebar({ categories }: SidebarProps) {
     <aside className={styles.sidebar}>
       <p className={styles.sectionTitle}>Kategorije</p>
       <nav className={styles.navigation}>
-        <NavLink
+        {/* <NavLink
           to="/"
           end
           className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
         >
           Sve kategorije
-        </NavLink>
+        </NavLink>*/}
 
         {categories.map((category) => (
           <NavLink

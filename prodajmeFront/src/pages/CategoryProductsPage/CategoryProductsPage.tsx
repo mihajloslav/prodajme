@@ -87,23 +87,23 @@ function CategoryProductsPage({ categories }: CategoryProductsPageProps) {
 
   return (
     <section className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <h1>Oglasi iz kategorije: {categoryName}</h1>
+      <div className={styles.sectionHeader}>
+        <h1>Oglasi iz kategorije: {categoryName}</h1>
+        <div className={styles.sectionHeaderActions}>
+          <label className={styles.sortControl}>
+            <span>Sortiraj</span>
+            <select
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value as ProductSortOrder)}
+              className={styles.sortSelect}
+            >
+              <option value="newest">Najnovije</option>
+              <option value="priceAsc">Cena rastuće</option>
+              <option value="priceDesc">Cena opadajuće</option>
+            </select>
+          </label>
           <p>{sortedProducts.length} rezultata</p>
         </div>
-        <label className={styles.sortControl}>
-          <span>Sortiraj</span>
-          <select
-            value={sortOrder}
-            onChange={(event) => setSortOrder(event.target.value as ProductSortOrder)}
-            className={styles.sortSelect}
-          >
-            <option value="newest">Najnovije</option>
-            <option value="priceAsc">Cena rastuće</option>
-            <option value="priceDesc">Cena opadajuće</option>
-          </select>
-        </label>
       </div>
 
       {loading && <p className={styles.stateText}>Učitavanje oglasa...</p>}
