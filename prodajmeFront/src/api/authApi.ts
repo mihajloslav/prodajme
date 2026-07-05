@@ -1,5 +1,6 @@
 import axiosClient from './axiosClient'
-import type { AuthUser, City, RegisterPayload, UpdateProfilePayload, VerifyEmailPayload } from './authTypes'
+import type { AuthUser, City, RegisterPayload, UpdateProfilePayload, VerifyEmailPayload, ResetPasswordPayload } from './authTypes'
+
 
 interface LoginPayload {
   email: string
@@ -82,3 +83,12 @@ export const updateUserProfile = async (userId: number, payload: UpdateProfilePa
 
   return user
 }
+
+export const forgotPassword = async (email: string): Promise<void> => {
+  await axiosClient.post('/api/users/forgot-password', { email })
+}
+
+export const resetPassword = async (payload: ResetPasswordPayload): Promise<void> => {
+  await axiosClient.post('/api/users/reset-password', payload)
+}
+

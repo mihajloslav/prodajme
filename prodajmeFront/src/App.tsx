@@ -18,6 +18,8 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage'
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 
 function App() {
   const [categories, setCategories] = useState<ProductCategory[]>([])
@@ -91,6 +93,22 @@ function App() {
         element={
           <Layout categories={categories}>
             <VerifyEmailPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <Layout categories={categories}>
+            <ForgotPasswordPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <Layout categories={categories}>
+            <ResetPasswordPage />
           </Layout>
         }
       />

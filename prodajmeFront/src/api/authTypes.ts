@@ -44,3 +44,10 @@ export interface UpdateProfilePayload {
   role: string
   cityId: number
 }
+
+export interface ResetPasswordPayload {
+  email: string
+  code: string
+  newPassword: string
+}
+

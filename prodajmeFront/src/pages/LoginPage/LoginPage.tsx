@@ -78,9 +78,9 @@ function LoginPage() {
               <input type="checkbox" />
               Zapamti me
             </label>
-            <span className={styles.linkAction}>
+            <Link to="/forgot-password" className={styles.linkAction}>
               Zaboravili ste lozinku?
-            </span>
+            </Link>
           </div>
 
           <button type="submit" className={styles.primaryButton} disabled={submitting}>
