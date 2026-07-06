@@ -28,7 +28,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "TEXT", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "text", nullable = false, columnDefinition = "TEXT")
     private String text;
 
     @Column(name = "dateSent")

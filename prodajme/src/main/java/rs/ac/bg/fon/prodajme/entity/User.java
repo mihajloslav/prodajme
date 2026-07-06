@@ -28,7 +28,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "NAME", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "surname", nullable = false, length = 50)
@@ -45,7 +45,7 @@ public class User {
     @Column(name = "username", nullable = false, length = 30, unique = true)
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false, length = 255)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Column(name = "verificationCode", length = 6)
@@ -57,7 +57,7 @@ public class User {
     @Column(nullable = false)
     private Boolean enabled = false;
 
-    @Column(name = "ROLE", nullable = false, length = 10)
+    @Column(name = "role", nullable = false, length = 10)
     private String role;
 
     @ManyToOne

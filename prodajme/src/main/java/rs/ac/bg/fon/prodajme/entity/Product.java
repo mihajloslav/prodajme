@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
@@ -44,7 +44,7 @@ public class Product {
     @Column(name = "datePosted")
     private LocalDateTime datePosted;
 
-    @Column(name = "STATUS", nullable = false, length = 10)
+    @Column(name = "status", nullable = false, length = 10)
     private String status;
 
     @ManyToOne

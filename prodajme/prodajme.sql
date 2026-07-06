@@ -26,11 +26,11 @@ CREATE TABLE `user` (
   phone VARCHAR(16) UNIQUE,
   email VARCHAR(100) UNIQUE NOT NULL,
   username VARCHAR(30) UNIQUE NOT NULL,
-  PASSWORD VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   verificationCode VARCHAR(6),
   resetPasswordCode VARCHAR(6),
   enabled BOOLEAN NOT NULL DEFAULT false,
-  ROLE VARCHAR(10) NOT NULL COMMENT 'ADMIN ili USER',
+  role VARCHAR(10) NOT NULL COMMENT 'ADMIN ili USER',
   idCity INT NOT NULL
 );
 
@@ -42,10 +42,10 @@ CREATE TABLE category (
 CREATE TABLE product (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
-  DESCRIPTION TEXT,
+  description TEXT,
   price DECIMAL(10,2) NOT NULL,
   datePosted DATETIME,
-  STATUS VARCHAR(10) NOT NULL COMMENT 'ACTIVE, RESERVED, SOLD',
+  status VARCHAR(10) NOT NULL COMMENT 'ACTIVE, RESERVED, SOLD',
   idUser INT NOT NULL,
   idCategory INT NOT NULL
 );
@@ -58,7 +58,7 @@ CREATE TABLE product_image (
 
 CREATE TABLE message (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  TEXT TEXT NOT NULL,
+  text TEXT NOT NULL,
   dateSent DATETIME,
   idSender INT NOT NULL,
   idReceiver INT NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE purchase (
 CREATE TABLE review (
   id INT AUTO_INCREMENT PRIMARY KEY,
   rating INT NOT NULL COMMENT '1 do 5',
-  COMMENT TEXT,
+  comment TEXT,
   dateCreated DATETIME,
   idReviewer INT NOT NULL,
   idReviewed INT NOT NULL,
@@ -148,19 +148,19 @@ ALTER TABLE favorite
 ADD CONSTRAINT fk_favorite_product
 FOREIGN KEY (idProduct) REFERENCES product(id);
 
-INSERT INTO city (id, NAME) VALUES
+INSERT INTO city (id, name) VALUES
 (1, 'Beograd'),
 (2, 'Novi Sad');
 
-INSERT INTO `user` (id, NAME, surname, phone, email, username, PASSWORD, verificationCode, resetPasswordCode, enabled, ROLE, idCity) VALUES
+INSERT INTO `user` (id, name, surname, phone, email, username, password, verificationCode, resetPasswordCode, enabled, role, idCity) VALUES
 (1, 'Mihajlo', 'Miki', '+38160111222', 'mihajlo1@example.com', 'mihajlo1', '123', NULL, NULL, true, 'ADMIN', 1),
 (2, 'Petar', 'Petrovic', '+38160333444', 'pera22@example.com', 'pera22', '123', NULL, NULL, true, 'USER', 2);
 
-INSERT INTO category (id, NAME) VALUES
+INSERT INTO category (id, name) VALUES
 (1, 'Elektronika'),
 (2, 'Nekretnine');
 
-INSERT INTO product (id, title, DESCRIPTION, price, datePosted, STATUS, idUser, idCategory) VALUES
+INSERT INTO product (id, title, description, price, datePosted, status, idUser, idCategory) VALUES
 (1, 'iPhone 15 Pro', 'Polovan telefon u odlicnom stanju.', 950.00, '2026-06-10 12:00:00', 'SOLD', 2, 1),
 (2, 'Dvosoban stan', 'Stan u centru grada.', 120000.00, '2026-06-15 09:30:00', 'ACTIVE', 1, 2);
 
@@ -170,13 +170,13 @@ INSERT INTO product_image (id, imageUrl, productId) VALUES
 (3, 'stan-dnevna.jpg', 2),
 (4, 'stan-kuhinja.jpg', 2);
 
-INSERT INTO message (id, TEXT, dateSent, idSender, idReceiver, idProduct) VALUES
+INSERT INTO message (id, text, dateSent, idSender, idReceiver, idProduct) VALUES
 (1, 'Koja je zadnja cena za iPhone?', '2026-06-18 10:15:00', 1, 2, 1);
 
 INSERT INTO purchase (id, datePurchased, finalPrice, idBuyer, idProduct) VALUES
 (1, '2026-06-20 14:30:00', 900.00, 1, 1);
 
-INSERT INTO review (id, rating, COMMENT, dateCreated, idReviewer, idReviewed, idProduct) VALUES
+INSERT INTO review (id, rating, comment, dateCreated, idReviewer, idReviewed, idProduct) VALUES
 (1, 5, 'Odlican kupac, sve po dogovoru.', '2026-06-21 16:00:00', 2, 1, 1);
 
 INSERT INTO favorite (id, dateAdded, idUser, idProduct) VALUES
