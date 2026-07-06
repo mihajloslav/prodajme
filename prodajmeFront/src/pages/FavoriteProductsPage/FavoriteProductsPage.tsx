@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axiosClient from '../../api/axiosClient'
+import { isProductDeleted } from '../../api/productTypes'
 import type { Product } from '../../api/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import { useAuth } from '../../context/AuthContext'
@@ -62,7 +63,7 @@ function FavoriteProductsPage() {
   }, [currentUser?.id])
 
   const favoriteProducts = useMemo(
-    () => favorites.map((favorite) => favorite.product).filter(Boolean),
+    () => favorites.map((favorite) => favorite.product).filter((product) => product && !isProductDeleted(product)),
     [favorites],
   )
 

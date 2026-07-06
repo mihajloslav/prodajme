@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axiosClient from '../../api/axiosClient'
-import { formatPrice } from '../../api/productTypes'
+import { formatPrice, getProductLabel, isProductDeleted } from '../../api/productTypes'
 import { useAuth } from '../../context/AuthContext'
 import styles from './PurchasesPage.module.css'
 
 interface PurchaseProduct {
   id: number
   title?: string
+  status?: string
 }
 
 interface PurchaseUser {
@@ -115,12 +116,12 @@ function PurchasesPage() {
           {myPurchases.map((purchase) => (
             <article key={purchase.id} className={styles.item}>
               <p className={styles.title}>
-                {purchase.product?.id ? (
+                {purchase.product?.id && !isProductDeleted(purchase.product) ? (
                   <Link to={`/products/${purchase.product.id}`}>
-                    {purchase.product.title || `Oglas #${purchase.product.id}`}
+                    {getProductLabel(purchase.product)}
                   </Link>
                 ) : (
-                  'N/A'
+                  getProductLabel(purchase.product)
                 )}
               </p>
 

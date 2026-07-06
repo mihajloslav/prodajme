@@ -6,7 +6,7 @@ const AUTH_STORAGE_KEY = 'prodajme_current_user'
 
 interface AuthContextValue {
   currentUser: AuthUser | null
-  login: (user: AuthUser) => void
+  login: (user: AuthUser, token?: string) => void
   logout: () => void
   isAuthenticated: boolean
 }
@@ -24,6 +24,7 @@ const getStoredUser = (): AuthUser | null => {
     return JSON.parse(storedUser) as AuthUser
   } catch {
     localStorage.removeItem(AUTH_STORAGE_KEY)
+    localStorage.removeItem('prodajme_jwt_token')
     return null
   }
 }
@@ -35,14 +36,18 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser)
 
-  const login = (user: AuthUser) => {
+  const login = (user: AuthUser, token?: string) => {
     setCurrentUser(user)
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+    if (token) {
+      localStorage.setItem('prodajme_jwt_token', token)
+    }
   }
 
   const logout = () => {
     setCurrentUser(null)
     localStorage.removeItem(AUTH_STORAGE_KEY)
+    localStorage.removeItem('prodajme_jwt_token')
   }
 
   const value = useMemo(

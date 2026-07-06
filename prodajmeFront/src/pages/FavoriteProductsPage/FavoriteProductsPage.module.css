@@ -35,6 +35,8 @@
 }
 
 .item {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #e6ebf2;
   border-radius: 0.65rem;
   overflow: hidden;

@@ -105,6 +105,29 @@ export const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price)
 
+export const DELETED_PRODUCT_STATUS = 'DELETED'
+
+export const UNAVAILABLE_PRODUCT_LABEL = 'Oglas više nije dostupan'
+
+export const isProductDeleted = (product?: { status?: string | null }) =>
+  (product?.status ?? '').toUpperCase() === DELETED_PRODUCT_STATUS
+
+export const getProductLabel = (product?: { id?: number; title?: string; status?: string | null }) => {
+  if (isProductDeleted(product)) {
+    return UNAVAILABLE_PRODUCT_LABEL
+  }
+
+  if (product?.title) {
+    return product.title
+  }
+
+  if (product?.id) {
+    return `Oglas #${product.id}`
+  }
+
+  return UNAVAILABLE_PRODUCT_LABEL
+}
+
 export const resolveImageUrl = (imageUrl?: string) => {
   if (!imageUrl) {
     return '/placeholder-product.svg'

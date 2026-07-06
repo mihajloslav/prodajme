@@ -21,16 +21,17 @@ const unwrapData = <TValue>(responseData: ApiResponse<TValue>, fallbackMessage: 
   return responseData.data
 }
 
-export const loginUser = async (payload: LoginPayload): Promise<AuthUser> => {
-  const response = await axiosClient.post<ApiResponse<{ user?: AuthUser }>>('/api/users/login', payload)
+export const loginUser = async (payload: LoginPayload): Promise<{ user: AuthUser; token: string }> => {
+  const response = await axiosClient.post<ApiResponse<{ user?: AuthUser; token?: string }>>('/api/users/login', payload)
   const data = unwrapData(response.data, 'Login response does not contain data')
   const user = data.user
+  const token = data.token
 
-  if (!user) {
-    throw new Error('Login response does not contain user data')
+  if (!user || !token) {
+    throw new Error('Login response does not contain user or token data')
   }
 
-  return user
+  return { user, token }
 }
 
 export const registerUser = async (payload: RegisterPayload): Promise<AuthUser> => {

@@ -22,8 +22,8 @@ function LoginPage() {
     try {
       setSubmitting(true)
       setError('')
-      const user = await loginUser({ email: email.trim(), password })
-      login(user)
+      const { user, token } = await loginUser({ email: email.trim(), password })
+      login(user, token)
       navigate('/')
     } catch (caughtError) {
       const error = caughtError as AxiosError<{ message?: string }>

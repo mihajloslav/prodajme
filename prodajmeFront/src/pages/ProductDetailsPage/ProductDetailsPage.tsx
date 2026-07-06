@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import type { AxiosError } from 'axios'
 import axiosClient from '../../api/axiosClient'
 import { useAuth } from '../../context/AuthContext'
 import { extractProduct, formatPrice, resolveImageUrl } from '../../api/productTypes'
@@ -95,8 +96,9 @@ function ProductDetailsPage() {
         const extractedProduct = extractProduct(response.data)
         setProduct(extractedProduct)
         setSelectedImageIndex(0)
-      } catch {
-        setError('Nismo uspeli da učitamo detalje oglasa.')
+      } catch (caughtError) {
+        const error = caughtError as AxiosError<{ message?: string }>
+        setError(error.response?.data?.message || 'Nismo uspeli da učitamo detalje oglasa.')
       } finally {
         setLoading(false)
       }
@@ -128,6 +130,37 @@ function ProductDetailsPage() {
 
     void loadReviews()
   }, [id])
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!isAuthenticated || !currentUser?.id || !id) {
+        setIsFavoriteMarked(false)
+        return
+      }
+
+      try {
+        const response = await axiosClient.get(`/api/favorites/user/${currentUser.id}`)
+        const favoritesData = response.data
+        const favoritesList = Array.isArray(favoritesData)
+          ? favoritesData
+          : favoritesData?.data?.favorites
+
+        if (Array.isArray(favoritesList)) {
+          const isFav = favoritesList.some(
+            (fav: any) => fav.product?.id === Number(id)
+          )
+          setIsFavoriteMarked(isFav)
+        } else {
+          setIsFavoriteMarked(false)
+        }
+      } catch (caughtError) {
+        console.error('Greška pri proveri omiljenih:', caughtError)
+        setIsFavoriteMarked(false)
+      }
+    }
+
+    void checkFavoriteStatus()
+  }, [id, currentUser?.id, isAuthenticated])
 
   if (loading) {
     return <p className={styles.stateText}>Učitavanje detalja oglasa...</p>
@@ -262,18 +295,24 @@ function ProductDetailsPage() {
     }
 
     if (isFavoriteMarked) {
-      return
-    }
-
-    try {
-      await axiosClient.post('/api/favorites', {
-        user: { id: currentUser.id },
-        product: { id: product.id },
-      })
-      setIsFavoriteMarked(true)
-      setFavoriteFeedback('Oglas je dodat u omiljene.')
-    } catch {
-      setFavoriteFeedback('Nismo uspeli da dodamo oglas u omiljene.')
+      try {
+        await axiosClient.delete(`/api/favorites/user/${currentUser.id}/product/${product.id}`)
+        setIsFavoriteMarked(false)
+        setFavoriteFeedback('Oglas je uklonjen iz omiljenih.')
+      } catch {
+        setFavoriteFeedback('Nismo uspeli da uklonimo oglas iz omiljenih.')
+      }
+    } else {
+      try {
+        await axiosClient.post('/api/favorites', {
+          user: { id: currentUser.id },
+          product: { id: product.id },
+        })
+        setIsFavoriteMarked(true)
+        setFavoriteFeedback('Oglas je dodat u omiljene.')
+      } catch {
+        setFavoriteFeedback('Nismo uspeli da dodamo oglas u omiljene.')
+      }
     }
   }
 
@@ -503,9 +542,8 @@ function ProductDetailsPage() {
                 type="button"
                 className={`${styles.secondaryAction} ${isFavoriteMarked ? styles.secondaryActionActive : ''}`}
                 onClick={handleFavoriteToggle}
-                disabled={isFavoriteMarked}
               >
-                {isFavoriteMarked ? 'U omiljenima' : 'Dodaj u omiljene'}
+                {isFavoriteMarked ? 'Ukloni iz omiljenih' : 'Dodaj u omiljene'}
               </button>
               {purchaseFeedback && <p className={styles.actionFeedback}>{purchaseFeedback}</p>}
               {messageFeedback && <p className={styles.actionFeedback}>{messageFeedback}</p>}

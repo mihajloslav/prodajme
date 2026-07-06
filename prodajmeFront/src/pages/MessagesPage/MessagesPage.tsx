@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axiosClient from '../../api/axiosClient'
+import { getProductLabel, isProductDeleted } from '../../api/productTypes'
 import { useAuth } from '../../context/AuthContext'
 import styles from './MessagesPage.module.css'
 
@@ -18,6 +19,7 @@ interface MessageUser {
 interface MessageProduct {
   id: number
   title?: string
+  status?: string
 }
 
 interface MessageItem {
@@ -269,7 +271,7 @@ function MessagesPage() {
                 className={`${styles.conversationItem} ${conversation.key === activeConversationKey ? styles.conversationItemActive : ''}`}
                 onClick={() => setActiveConversationKey(conversation.key)}
               >
-                <p className={styles.conversationTitle}>{conversation.product.title || `Oglas #${conversation.product.id}`}</p>
+                <p className={styles.conversationTitle}>{getProductLabel(conversation.product)}</p>
                 <p className={styles.conversationSubTitle}>{formatPersonName(conversation.otherUser)}</p>
                 <p className={styles.conversationPreview}>{conversation.lastMessage.text}</p>
                 <p className={styles.conversationDate}>{formatDate(conversation.lastMessage.dateSent)}</p>
@@ -281,7 +283,15 @@ function MessagesPage() {
             {selectedConversation ? (
               <>
                 <div className={styles.chatHeader}>
-                  <h2>{selectedConversation.product.title || `Oglas #${selectedConversation.product.id}`}</h2>
+                  <h2>
+                    {isProductDeleted(selectedConversation.product) ? (
+                      <span className={styles.deletedProductLabel}>{getProductLabel(selectedConversation.product)}</span>
+                    ) : (
+                      <a href={`/products/${selectedConversation.product.id}`} className={styles.productLink}>
+                        {getProductLabel(selectedConversation.product)}
+                      </a>
+                    )}
+                  </h2>
                   <p>Sa: {formatPersonName(selectedConversation.otherUser)}</p>
                 </div>
 

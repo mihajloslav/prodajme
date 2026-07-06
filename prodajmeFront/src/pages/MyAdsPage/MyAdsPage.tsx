@@ -10,18 +10,7 @@ import styles from './MyAdsPage.module.css'
 
 const readErrorMessage = (caughtError: unknown, fallback: string) => {
   const error = caughtError as AxiosError<{ message?: string }>
-  const message = error.response?.data?.message || ''
-  const normalizedMessage = message.toLowerCase()
-
-  if (
-    normalizedMessage.includes('foreign key constraint') ||
-    normalizedMessage.includes('fk_message_product') ||
-    normalizedMessage.includes('cannot delete or update a parent row')
-  ) {
-    return 'Oglas nije moguće obrisati jer ima povezane poruke ili druge aktivnosti.'
-  }
-
-  return message || fallback
+  return error.response?.data?.message || fallback
 }
 
 function MyAdsPage() {

@@ -216,3 +216,19 @@
     min-height: 55vh;
   }
 }
+
+.productLink {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.productLink:hover {
+  text-decoration: none;
+}
+
+.deletedProductLabel {
+  color: #8193a8;
+  font-style: italic;
+}
+
