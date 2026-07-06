@@ -51,6 +51,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        if ("DELETED".equalsIgnoreCase(product.getStatus())) {
+            throw new BadRequestException("Product is no longer available");
+        }
+
         if (product.getUser() != null && product.getUser().getId().equals(buyerId)) {
             throw new BadRequestException("You cannot buy your own product");
         }

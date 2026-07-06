@@ -45,6 +45,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        if ("DELETED".equalsIgnoreCase(product.getStatus())) {
+            throw new BadRequestException("Product is no longer available");
+        }
+
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new BadRequestException("Favorite already exists");
         }

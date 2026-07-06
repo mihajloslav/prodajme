@@ -20,6 +20,7 @@ import rs.ac.bg.fon.prodajme.mapper.UserMapper;
 import rs.ac.bg.fon.prodajme.response.ApiResponse;
 import rs.ac.bg.fon.prodajme.response.ApiResponseFactory;
 import rs.ac.bg.fon.prodajme.service.UserService;
+import rs.ac.bg.fon.prodajme.service.JwtService;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -62,11 +65,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto) {
-        UserDto user = UserMapper.toDto(
-            userService.login(loginDto.getEmail(), loginDto.getPassword())
-        );
+        rs.ac.bg.fon.prodajme.entity.User userEntity = userService.login(loginDto.getEmail(), loginDto.getPassword());
+        UserDto user = UserMapper.toDto(userEntity);
+        String token = jwtService.generateToken(userEntity);
 
-        return ResponseEntity.ok(ApiResponseFactory.success("User logged in successfully", Map.of("user", user)));
+        return ResponseEntity.ok(ApiResponseFactory.success("User logged in successfully", Map.of(
+            "token", token,
+            "user", user
+        )));
     }
 
     @PostMapping("/verify")

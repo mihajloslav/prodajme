@@ -1,0 +1,1 @@
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=4.1.0&packaging=jar&configurationFileFormat=properties&jvmVersion=21&groupId=rs.ac.bg.fon&artifactId=prodajme&packageName=rs.ac.bg.fon.prodajme&dependencies=web,data-jpa,mysql,lombok,validation

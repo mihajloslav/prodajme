@@ -1,6 +1,7 @@
 package rs.ac.bg.fon.prodajme.mapper;
 
 import rs.ac.bg.fon.prodajme.dto.ProductDto;
+import rs.ac.bg.fon.prodajme.dto.UserDto;
 import rs.ac.bg.fon.prodajme.entity.Product;
 
 import java.util.Comparator;
@@ -27,7 +28,11 @@ public final class ProductMapper {
         dto.setDatePosted(entity.getDatePosted());
         dto.setStatus(entity.getStatus());
 
-        dto.setUser(UserMapper.toNestedDto(entity.getUser()));
+        UserDto userDto = UserMapper.toNestedDto(entity.getUser());
+        if (userDto != null && entity.getUser() != null) {
+            userDto.setCity(CityMapper.toDto(entity.getUser().getCity()));
+        }
+        dto.setUser(userDto);
         dto.setCategory(CategoryMapper.toDto(entity.getCategory()));
 
         return dto;

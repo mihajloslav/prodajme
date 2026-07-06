@@ -9,10 +9,7 @@ import rs.ac.bg.fon.prodajme.entity.User;
 import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.CategoryRepository;
 import rs.ac.bg.fon.prodajme.repository.FavoriteRepository;
-import rs.ac.bg.fon.prodajme.repository.MessageRepository;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
-import rs.ac.bg.fon.prodajme.repository.PurchaseRepository;
-import rs.ac.bg.fon.prodajme.repository.ReviewRepository;
 import rs.ac.bg.fon.prodajme.repository.UserRepository;
 import rs.ac.bg.fon.prodajme.service.ProductService;
 
@@ -22,49 +19,52 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final String STATUS_DELETED = "DELETED";
+
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final MessageRepository messageRepository;
     private final FavoriteRepository favoriteRepository;
-    private final PurchaseRepository purchaseRepository;
-    private final ReviewRepository reviewRepository;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               UserRepository userRepository,
                               CategoryRepository categoryRepository,
-                              MessageRepository messageRepository,
-                              FavoriteRepository favoriteRepository,
-                              PurchaseRepository purchaseRepository,
-                              ReviewRepository reviewRepository) {
+                              FavoriteRepository favoriteRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
-        this.messageRepository = messageRepository;
         this.favoriteRepository = favoriteRepository;
-        this.purchaseRepository = purchaseRepository;
-        this.reviewRepository = reviewRepository;
     }
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAll();
+        return productRepository.findByStatusNotIgnoreCase(STATUS_DELETED);
     }
 
     @Override
     public Product findById(Integer id) {
-        return productRepository.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        if (STATUS_DELETED.equalsIgnoreCase(product.getStatus())) {
+            throw new ResourceNotFoundException("Product is no longer available");
+        }
+
+        return product;
     }
 
     @Override
     public List<Product> findByStatus(String status) {
-        return productRepository.findByStatus(status);
+        if (STATUS_DELETED.equalsIgnoreCase(status)) {
+            return List.of();
+        }
+
+        return productRepository.findByStatusIgnoreCase(status);
     }
 
     @Override
     public List<Product> searchByTitle(String title) {
-        return productRepository.findByTitleContainingIgnoreCase(title);
+        return productRepository.findByTitleContainingIgnoreCaseAndStatusNotIgnoreCase(title, STATUS_DELETED);
     }
 
     @Override
@@ -147,16 +147,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        if (!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Product not found");
-        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        // Delete dependent rows first to satisfy FK constraints when removing product.
-        messageRepository.deleteByProductId(id);
+        product.setStatus(STATUS_DELETED);
+        productRepository.save(product);
         favoriteRepository.deleteByProductId(id);
-        purchaseRepository.deleteByProductId(id);
-        reviewRepository.deleteByProductId(id);
-
-        productRepository.deleteById(id);
     }
 }
