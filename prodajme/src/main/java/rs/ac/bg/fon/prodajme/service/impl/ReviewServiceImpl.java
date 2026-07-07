@@ -37,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> findByProductId(Integer productId) {
         if (!productRepository.existsById(productId)) {
-            throw new ResourceNotFoundException("Product not found");
+            throw new ResourceNotFoundException("Proizvod nije pronađen.");
         }
         return reviewRepository.findByProductId(productId);
     }
@@ -45,17 +45,17 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review createReview(Integer reviewerId, Integer reviewedId, Integer productId, Integer rating, String comment) {
         if (rating == null || rating < 1 || rating > 5) {
-            throw new BadRequestException("Rating must be between 1 and 5");
+            throw new BadRequestException("Ocena mora biti između 1 i 5.");
         }
 
         User reviewer = userRepository.findById(reviewerId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         User reviewed = userRepository.findById(reviewedId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
         Review review = new Review();
         review.setReviewer(reviewer);

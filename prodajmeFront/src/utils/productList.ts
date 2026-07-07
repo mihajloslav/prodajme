@@ -1,4 +1,4 @@
-import type { Product } from '../api/productTypes'
+import type { Product } from '../api/products/productTypes'
 
 export type ProductSortOrder = 'newest' | 'priceAsc' | 'priceDesc'
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import axiosClient from '../../api/axiosClient'
+import axiosClient from '../../api/client/axiosClient'
 import { useAuth } from '../../context/AuthContext'
-import { extractProduct, formatPrice, resolveImageUrl } from '../../api/productTypes'
-import type { Product, ProductUser } from '../../api/productTypes'
+import { extractProduct, formatPrice, resolveImageUrl } from '../../api/products/productTypes'
+import type { Product, ProductUser } from '../../api/products/productTypes'
 import styles from './ProductDetailsPage.module.css'
 
 interface Review {
@@ -250,7 +250,7 @@ function ProductDetailsPage() {
     setIsMessageModalOpen(true)
   }
 
-  const handleMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleMessageSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!isAuthenticated || !currentUser?.id) {
@@ -365,7 +365,7 @@ function ProductDetailsPage() {
     }
   }
 
-  const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleReviewSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!isAuthenticated || !currentUser?.id) {

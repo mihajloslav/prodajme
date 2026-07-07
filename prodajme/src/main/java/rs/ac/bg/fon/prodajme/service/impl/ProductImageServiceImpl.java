@@ -39,7 +39,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public List<ProductImage> findByProductId(Integer productId) {
         if (!productRepository.existsById(productId)) {
-            throw new ResourceNotFoundException("Product not found");
+            throw new ResourceNotFoundException("Proizvod nije pronađen.");
         }
         return productImageRepository.findByProductId(productId)
                 .stream()
@@ -50,11 +50,11 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public ProductImage addImage(Integer productId, String imageUrl) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
         long imageCount = productImageRepository.findByProductId(productId).size();
         if (imageCount >= 10) {
-            throw new BadRequestException("Product can have maximum 10 images");
+            throw new BadRequestException("Proizvod može imati najviše 10 slika.");
         }
 
         ProductImage image = new ProductImage();
@@ -67,7 +67,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public void deleteImage(Integer imageId) {
         ProductImage image = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product image not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Slika proizvoda nije pronađena."));
 
         deleteFileIfUploaded(image.getImageUrl());
         productImageRepository.delete(image);

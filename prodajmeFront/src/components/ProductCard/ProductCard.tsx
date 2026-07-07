@@ -1,7 +1,7 @@
 import type { SyntheticEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { formatPrice, resolveImageUrl } from '../../api/productTypes'
-import type { Product } from '../../api/productTypes'
+import { formatPrice, resolveImageUrl } from '../../api/products/productTypes'
+import type { Product } from '../../api/products/productTypes'
 import styles from './ProductCard.module.css'
 
 interface ProductCardProps {

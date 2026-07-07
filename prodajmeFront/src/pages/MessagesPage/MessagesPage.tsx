@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import axiosClient from '../../api/axiosClient'
-import { getProductLabel, isProductDeleted } from '../../api/productTypes'
+import axiosClient from '../../api/client/axiosClient'
+import { getProductLabel, isProductDeleted } from '../../api/products/productTypes'
 import { useAuth } from '../../context/AuthContext'
 import styles from './MessagesPage.module.css'
 
@@ -207,7 +207,7 @@ function MessagesPage() {
     [conversations, activeConversationKey],
   )
 
-  const handleSendReply = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSendReply: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!selectedConversation || !currentUser?.id || !draftMessage.trim()) {

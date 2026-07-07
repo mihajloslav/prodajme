@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Favorite;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.enums.ProductStatus;
 import rs.ac.bg.fon.prodajme.exception.BadRequestException;
 import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.FavoriteRepository;
@@ -32,7 +33,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> findByUserId(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Korisnik nije pronađen.");
         }
         return favoriteRepository.findByUserId(userId);
     }
@@ -40,17 +41,17 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite addToFavorites(Integer userId, Integer productId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
-        if ("DELETED".equalsIgnoreCase(product.getStatus())) {
-            throw new BadRequestException("Product is no longer available");
+        if (product.getStatus() == ProductStatus.DELETED) {
+            throw new BadRequestException("Proizvod više nije dostupan.");
         }
 
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new BadRequestException("Favorite already exists");
+            throw new BadRequestException("Ovo je već dodato u favorite.");
         }
 
         Favorite favorite = new Favorite();
@@ -64,7 +65,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void removeFromFavorites(Integer userId, Integer productId) {
         Favorite favorite = favoriteRepository.findByUserIdAndProductId(userId, productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Favorite nije pronađen."));
 
         favoriteRepository.delete(favorite);
     }

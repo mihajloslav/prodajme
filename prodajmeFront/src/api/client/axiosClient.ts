@@ -22,6 +22,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Ako backend vrati 401, korisnik se automatski odjavljuje
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('prodajme_current_user')
       localStorage.removeItem('prodajme_jwt_token')

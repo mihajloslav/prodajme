@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { verifyEmail } from '../../api/authApi'
+import { verifyEmail } from '../../api/auth/authApi'
 import styles from './VerifyEmailPage.module.css'
 
 function VerifyEmailPage() {
@@ -22,7 +22,7 @@ function VerifyEmailPage() {
     setMessage(initialMessage)
   }, [initialMessage])
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     try {

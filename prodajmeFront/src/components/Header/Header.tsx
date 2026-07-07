@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import type { ProductCategory } from '../../api/productTypes'
+import type { ProductCategory } from '../../api/products/productTypes'
 import { CategoryIcon } from '../../utils/categoryIcons'
 import styles from './Header.module.css'
 
@@ -30,7 +30,7 @@ function Header({ categories }: HeaderProps) {
     }
   }, [isMenuOpen])
 
-  const handleSearch = (event: FormEvent) => {
+  const handleSearch: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
 
     const trimmedQuery = query.trim()

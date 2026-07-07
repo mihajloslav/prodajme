@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findReceivedMessages(Integer receiverId) {
         if (!userRepository.existsById(receiverId)) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Korisnik nije pronađen.");
         }
         return messageRepository.findByReceiverId(receiverId);
     }
@@ -39,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findSentMessages(Integer senderId) {
         if (!userRepository.existsById(senderId)) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Korisnik nije pronađen.");
         }
         return messageRepository.findBySenderId(senderId);
     }
@@ -47,13 +47,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message sendMessage(Integer senderId, Integer receiverId, Integer productId, String text) {
         User sender = userRepository.findById(senderId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         User receiver = userRepository.findById(receiverId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
         Message message = new Message();
         message.setSender(sender);

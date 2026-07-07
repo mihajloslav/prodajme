@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import type { AxiosError } from 'axios'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { loginUser } from '../../api/authApi'
+import { loginUser } from '../../api/auth/authApi'
 import { useAuth } from '../../context/AuthContext'
 import styles from './LoginPage.module.css'
 
@@ -16,7 +16,7 @@ function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     try {

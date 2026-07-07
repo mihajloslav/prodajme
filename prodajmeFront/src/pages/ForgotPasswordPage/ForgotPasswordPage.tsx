@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import { forgotPassword } from '../../api/authApi'
+import { forgotPassword } from '../../api/auth/authApi'
 import styles from './ForgotPasswordPage.module.css'
 
 function ForgotPasswordPage() {
@@ -11,7 +11,7 @@ function ForgotPasswordPage() {
   const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     try {

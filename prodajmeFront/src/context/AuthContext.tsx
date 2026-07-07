@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { AuthUser } from '../api/authTypes'
+import type { AuthUser } from '../api/auth/authTypes'
 
 const AUTH_STORAGE_KEY = 'prodajme_current_user'
 

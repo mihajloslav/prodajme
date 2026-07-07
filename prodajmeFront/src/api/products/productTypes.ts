@@ -38,7 +38,7 @@ export interface Product {
   category?: ProductCategory
 }
 
-interface ApiResponse<TData> {
+export interface ApiResponse<TData> {
   success?: boolean
   message?: string
   status?: string
@@ -60,6 +60,7 @@ const isProductsApiResponse = (value: unknown): value is ApiResponse<{ products?
 const isCategoriesApiResponse = (value: unknown): value is ApiResponse<{ categories?: ProductCategory[] }> =>
   isObjectRecord(value) && Object.prototype.hasOwnProperty.call(value, 'data')
 
+// Normalizacija odgovora sa liste oglasa.
 export function extractProducts(payload: unknown): Product[] {
   if (Array.isArray(payload)) {
     return payload
@@ -73,6 +74,7 @@ export function extractProducts(payload: unknown): Product[] {
   return Array.isArray(products) ? products : []
 }
 
+// Normalizacija odgovora sa jednim oglasom.
 export function extractProduct(payload: unknown): Product | null {
   if (isProductApiResponse(payload)) {
     return payload.data?.product ?? null
@@ -85,6 +87,7 @@ export function extractProduct(payload: unknown): Product | null {
   return null
 }
 
+// Normalizacija odgovora sa listom kategorija.
 export function extractCategories(payload: unknown): ProductCategory[] {
   if (Array.isArray(payload)) {
     return payload
@@ -98,6 +101,7 @@ export function extractCategories(payload: unknown): ProductCategory[] {
   return Array.isArray(categories) ? categories : []
 }
 
+// Formatiranje cene za prikaz korisniku.
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('sr-RS', {
     style: 'currency',
@@ -106,7 +110,6 @@ export const formatPrice = (price: number) =>
   }).format(price)
 
 export const DELETED_PRODUCT_STATUS = 'DELETED'
-
 export const UNAVAILABLE_PRODUCT_LABEL = 'Oglas više nije dostupan'
 
 export const isProductDeleted = (product?: { status?: string | null }) =>
@@ -128,6 +131,7 @@ export const getProductLabel = (product?: { id?: number; title?: string; status?
   return UNAVAILABLE_PRODUCT_LABEL
 }
 
+// Pretvaranje relativne putanje slike u pun URL.
 export const resolveImageUrl = (imageUrl?: string) => {
   if (!imageUrl) {
     return '/placeholder-product.svg'

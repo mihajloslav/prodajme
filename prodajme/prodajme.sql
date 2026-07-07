@@ -30,7 +30,7 @@ CREATE TABLE `user` (
   verificationCode VARCHAR(6),
   resetPasswordCode VARCHAR(6),
   enabled BOOLEAN NOT NULL DEFAULT false,
-  role VARCHAR(10) NOT NULL COMMENT 'ADMIN ili USER',
+  role ENUM('ADMIN','USER') NOT NULL,
   idCity INT NOT NULL
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE product (
   description TEXT,
   price DECIMAL(10,2) NOT NULL,
   datePosted DATETIME,
-  status VARCHAR(10) NOT NULL COMMENT 'ACTIVE, RESERVED, SOLD',
+  status ENUM('ACTIVE','RESERVED','SOLD','DELETED') NOT NULL,
   idUser INT NOT NULL,
   idCategory INT NOT NULL
 );

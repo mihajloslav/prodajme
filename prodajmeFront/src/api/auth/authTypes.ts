@@ -50,4 +50,3 @@ export interface ResetPasswordPayload {
   code: string
   newPassword: string
 }
-

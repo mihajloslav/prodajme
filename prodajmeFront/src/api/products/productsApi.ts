@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient'
+import axiosClient from '../client/axiosClient'
 import { extractProduct } from './productTypes'
 import type { Product } from './productTypes'
 
@@ -10,6 +10,7 @@ interface CreateProductInput {
   categoryId: number
 }
 
+// Kreiranje novog oglasa za korisnika.
 export const createProduct = async (input: CreateProductInput): Promise<Product> => {
   const response = await axiosClient.post('/api/products', {
     title: input.title,
@@ -23,12 +24,13 @@ export const createProduct = async (input: CreateProductInput): Promise<Product>
   const product = extractProduct(response.data)
 
   if (!product) {
-    throw new Error('Create product response does not contain product data')
+    throw new Error('Odgovor prilikom kreiranja oglasa ne sadrži podatke o oglasu.')
   }
 
   return product
 }
 
+// Upload slike za postojeći oglas.
 export const uploadProductImage = async (productId: number, file: File): Promise<void> => {
   const formData = new FormData()
   formData.append('file', file)

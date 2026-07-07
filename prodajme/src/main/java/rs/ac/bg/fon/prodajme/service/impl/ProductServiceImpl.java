@@ -6,6 +6,7 @@ import rs.ac.bg.fon.prodajme.entity.Category;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.ProductImage;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.enums.ProductStatus;
 import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.CategoryRepository;
 import rs.ac.bg.fon.prodajme.repository.FavoriteRepository;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private static final String STATUS_DELETED = "DELETED";
+    private static final ProductStatus STATUS_DELETED = ProductStatus.DELETED;
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -38,16 +39,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findByStatusNotIgnoreCase(STATUS_DELETED);
+        return productRepository.findByStatusNot(STATUS_DELETED);
     }
 
     @Override
     public Product findById(Integer id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
-        if (STATUS_DELETED.equalsIgnoreCase(product.getStatus())) {
-            throw new ResourceNotFoundException("Product is no longer available");
+        if (product.getStatus() == STATUS_DELETED) {
+            throw new ResourceNotFoundException("Proizvod više nije dostupan.");
         }
 
         return product;
@@ -55,26 +56,37 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findByStatus(String status) {
-        if (STATUS_DELETED.equalsIgnoreCase(status)) {
+        if (status == null || status.isBlank()) {
             return List.of();
         }
 
-        return productRepository.findByStatusIgnoreCase(status);
+        ProductStatus parsedStatus;
+        try {
+            parsedStatus = ProductStatus.valueOf(status.trim().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return List.of();
+        }
+
+        if (parsedStatus == STATUS_DELETED) {
+            return List.of();
+        }
+
+        return productRepository.findByStatus(parsedStatus);
     }
 
     @Override
     public List<Product> searchByTitle(String title) {
-        return productRepository.findByTitleContainingIgnoreCaseAndStatusNotIgnoreCase(title, STATUS_DELETED);
+        return productRepository.findByTitleContainingIgnoreCaseAndStatusNot(title, STATUS_DELETED);
     }
 
     @Override
     public Product create(Product product) {
         if (product.getUser() == null || product.getUser().getId() == null) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Korisnik nije pronađen.");
         }
 
         if (product.getCategory() == null || product.getCategory().getId() == null) {
-            throw new ResourceNotFoundException("Category not found");
+            throw new ResourceNotFoundException("Kategorija nije pronađena.");
         }
 
         return create(product, product.getUser().getId(), product.getCategory().getId());
@@ -83,10 +95,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product, Integer userId, Integer categoryId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Kategorija nije pronađena."));
 
         if (product.getDatePosted() == null) {
             product.setDatePosted(LocalDateTime.now());
@@ -107,11 +119,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product update(Integer id, Product product) {
         if (product.getUser() == null || product.getUser().getId() == null) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Korisnik nije pronađen.");
         }
 
         if (product.getCategory() == null || product.getCategory().getId() == null) {
-            throw new ResourceNotFoundException("Category not found");
+            throw new ResourceNotFoundException("Kategorija nije pronađena.");
         }
 
         return update(id, product, product.getUser().getId(), product.getCategory().getId());
@@ -121,9 +133,9 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Integer id, Product product, Integer userId, Integer categoryId) {
         Product existingProduct = findById(id);
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Kategorija nije pronađena."));
 
         existingProduct.setTitle(product.getTitle());
         existingProduct.setDescription(product.getDescription());
@@ -148,7 +160,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void delete(Integer id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
         product.setStatus(STATUS_DELETED);
         productRepository.save(product);

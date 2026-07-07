@@ -25,6 +25,6 @@ public class CityServiceImpl implements CityService {
     @Override
     public City findById(Integer id) {
         return cityRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Grad nije pronađen."));
     }
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
+import type { AxiosError } from 'axios'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { getCities, registerUser } from '../../api/authApi'
-import type { City } from '../../api/authTypes'
+import { getCities, registerUser } from '../../api/auth/authApi'
+import type { City } from '../../api/auth/authTypes'
 import styles from './RegisterPage.module.css'
 
 function RegisterPage() {
@@ -41,11 +42,21 @@ function RegisterPage() {
     void loadCities()
   }, [])
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (password !== confirmPassword) {
       setError('Lozinke se ne poklapaju.')
+      return
+    }
+
+    if (!/^(?=.*[A-Z])(?=.*\d).{7,}$/.test(password)) {
+      setError('Lozinka mora imati najmanje 7 karaktera, najmanje jedno veliko slovo i najmanje jedan broj.')
+      return
+    }
+
+    if (!/^\+381\d{8,9}$/.test(phone.trim())) {
+      setError('Neispravan format telefona. Format mora biti +381XXXXXXXX.')
       return
     }
 
@@ -75,8 +86,9 @@ function RegisterPage() {
           message: 'Verifikacioni kod je poslat na vaš email.',
         },
       })
-    } catch {
-      setError('Registracija nije uspela. Proverite unete podatke.')
+    } catch (caughtError) {
+      const error = caughtError as AxiosError<{ message?: string }>
+      setError(error.response?.data?.message || 'Registracija nije uspela. Proverite unete podatke.')
     } finally {
       setSubmitting(false)
     }
@@ -127,7 +139,7 @@ function RegisterPage() {
           <input
             id="register-phone"
             type="text"
-            placeholder="0611234567"
+            placeholder="+38161234567"
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
             required

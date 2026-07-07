@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.bg.fon.prodajme.enums.UserRole;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class UserDto {
     private String phone;
     private String email;
     private String username;
-    private String role;
+    private UserRole role;
     private CityDto city;
 }

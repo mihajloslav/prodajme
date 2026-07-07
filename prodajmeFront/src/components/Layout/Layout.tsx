@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { ProductCategory } from '../../api/productTypes'
+import type { ProductCategory } from '../../api/products/productTypes'
 import Header from '../Header/Header'
 import Sidebar from '../Sidebar/Sidebar'
 import styles from './Layout.module.css'

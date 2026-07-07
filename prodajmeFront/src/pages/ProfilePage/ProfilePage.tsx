@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
+import type { AxiosError } from 'axios'
 import { Link, Navigate } from 'react-router-dom'
-import { getCities, updateUserProfile } from '../../api/authApi'
-import type { City } from '../../api/authTypes'
+import { getCities, updateUserProfile } from '../../api/auth/authApi'
+import type { City } from '../../api/auth/authTypes'
 import { useAuth } from '../../context/AuthContext'
 import styles from './ProfilePage.module.css'
 
@@ -66,8 +67,13 @@ function ProfilePage() {
     setFeedback('')
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
+
+    if (!/^\+381\d{8,9}$/.test(phone.trim())) {
+      setFeedback('Neispravan format telefona. Format mora biti +381XXXXXXXX.')
+      return
+    }
 
     if (!cityId) {
       setFeedback('Izaberite grad.')
@@ -91,8 +97,9 @@ function ProfilePage() {
       login(updatedUser)
       setIsEditing(false)
       setFeedback('Podaci su uspešno ažurirani.')
-    } catch {
-      setFeedback('Ažuriranje nije uspelo. Proverite unete podatke.')
+    } catch (caughtError) {
+      const error = caughtError as AxiosError<{ message?: string }>
+      setFeedback(error.response?.data?.message || 'Ažuriranje nije uspelo. Proverite unete podatke.')
     } finally {
       setSubmitting(false)
     }

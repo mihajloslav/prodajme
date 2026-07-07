@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import type { ProductCategory } from '../../api/productTypes'
+import type { ProductCategory } from '../../api/products/productTypes'
 import { CategoryIcon } from '../../utils/categoryIcons'
 import styles from './Sidebar.module.css'
 

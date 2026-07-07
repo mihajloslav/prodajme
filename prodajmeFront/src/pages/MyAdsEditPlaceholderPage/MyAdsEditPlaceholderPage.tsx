@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { ChangeEvent, FormEventHandler } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import axiosClient from '../../api/axiosClient'
-import { getCategories } from '../../api/categoriesApi'
-import { extractProduct, resolveImageUrl } from '../../api/productTypes'
-import type { Product, ProductCategory, ProductImage } from '../../api/productTypes'
+import axiosClient from '../../api/client/axiosClient'
+import { getCategories } from '../../api/categories/categoriesApi'
+import { extractProduct, resolveImageUrl } from '../../api/products/productTypes'
+import type { Product, ProductCategory, ProductImage } from '../../api/products/productTypes'
 import { useAuth } from '../../context/AuthContext'
 import styles from './MyAdsEditPlaceholderPage.module.css'
 
@@ -156,7 +156,7 @@ function MyAdsEditPlaceholderPage() {
     }
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!id || !product || !currentUser?.id) {

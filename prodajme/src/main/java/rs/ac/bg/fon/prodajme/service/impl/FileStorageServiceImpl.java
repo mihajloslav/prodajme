@@ -34,16 +34,16 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String storeProductImage(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new BadRequestException("File is required");
+            throw new BadRequestException("Fajl je obavezan.");
         }
 
         if (file.getSize() > MAX_FILE_SIZE_BYTES) {
-            throw new BadRequestException("Image size must be less than 5MB");
+            throw new BadRequestException("Veličina slike mora biti manja od 5MB.");
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-            throw new BadRequestException("Only JPEG, PNG, and WEBP images are allowed");
+            throw new BadRequestException("Dozvoljene su samo JPEG, PNG i WEBP slike.");
         }
 
         String extension = resolveExtension(file.getOriginalFilename(), contentType);
@@ -54,7 +54,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             Path targetPath = uploadDir.resolve(fileName);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new RuntimeException("Failed to store image file", ex);
+            throw new RuntimeException("Nije uspelo čuvanje slike", ex);
         }
 
         return "/uploads/products/" + fileName;

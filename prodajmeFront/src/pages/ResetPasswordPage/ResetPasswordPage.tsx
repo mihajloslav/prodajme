@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEventHandler } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import { resetPassword } from '../../api/authApi'
+import { resetPassword } from '../../api/auth/authApi'
 import styles from './ResetPasswordPage.module.css'
 
 function ResetPasswordPage() {
@@ -26,7 +26,7 @@ function ResetPasswordPage() {
     setMessage(initialMessage)
   }, [initialMessage])
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!email.trim() || !code.trim() || !newPassword || !confirmPassword) {
@@ -36,6 +36,11 @@ function ResetPasswordPage() {
 
     if (newPassword !== confirmPassword) {
       setError('Lozinke se ne podudaraju.')
+      return
+    }
+
+    if (!/^(?=.*[A-Z])(?=.*\d).{7,}$/.test(newPassword)) {
+      setError('Lozinka mora imati najmanje 7 karaktera, najmanje jedno veliko slovo i najmanje jedan broj.')
       return
     }
 

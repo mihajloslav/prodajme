@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.bg.fon.prodajme.entity.Product;
 import rs.ac.bg.fon.prodajme.entity.Purchase;
 import rs.ac.bg.fon.prodajme.entity.User;
+import rs.ac.bg.fon.prodajme.enums.ProductStatus;
 import rs.ac.bg.fon.prodajme.exception.BadRequestException;
 import rs.ac.bg.fon.prodajme.exception.ResourceNotFoundException;
 import rs.ac.bg.fon.prodajme.repository.ProductRepository;
@@ -39,28 +40,28 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public Purchase findById(Integer id) {
         return purchaseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Purchase not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Kupovina nije pronađena."));
     }
 
     @Override
     @Transactional
     public Purchase createPurchase(Integer buyerId, Integer productId, BigDecimal finalPrice) {
         User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik nije pronađen."));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proizvod nije pronađen."));
 
-        if ("DELETED".equalsIgnoreCase(product.getStatus())) {
-            throw new BadRequestException("Product is no longer available");
+        if (product.getStatus() == ProductStatus.DELETED) {
+            throw new BadRequestException("Proizvod više nije dostupan.");
         }
 
         if (product.getUser() != null && product.getUser().getId().equals(buyerId)) {
-            throw new BadRequestException("You cannot buy your own product");
+            throw new BadRequestException("Ne možete kupiti svoj proizvod.");
         }
 
         if (purchaseRepository.existsByProductId(productId)) {
-            throw new BadRequestException("Purchase for product already exists");
+            throw new BadRequestException("Kupovina za ovaj proizvod već postoji.");
         }
 
         Purchase purchase = new Purchase();
@@ -71,7 +72,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         Purchase savedPurchase = purchaseRepository.save(purchase);
 
-        product.setStatus("SOLD");
+        product.setStatus(ProductStatus.SOLD);
         productRepository.save(product);
 
         return savedPurchase;

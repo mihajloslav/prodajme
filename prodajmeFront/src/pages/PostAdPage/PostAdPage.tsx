@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { ChangeEvent, FormEventHandler } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import { createProduct, uploadProductImage } from '../../api/productsApi'
+import { createProduct, uploadProductImage } from '../../api/products/productsApi'
 import { useAuth } from '../../context/AuthContext'
-import type { ProductCategory } from '../../api/productTypes'
+import type { ProductCategory } from '../../api/products/productTypes'
 import styles from './PostAdPage.module.css'
 
 interface PostAdPageProps {
@@ -98,7 +98,7 @@ function PostAdPage({ categories }: PostAdPageProps) {
     [submitting, title, description, price, categoryId],
   )
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
     if (!currentUser?.id) {

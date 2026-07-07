@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.bg.fon.prodajme.enums.ProductStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class ProductDto {
     private BigDecimal price;
     private List<ProductImageDto> images;
     private LocalDateTime datePosted;
-    private String status;
+    private ProductStatus status;
     private UserDto user;
     private CategoryDto category;
 }
