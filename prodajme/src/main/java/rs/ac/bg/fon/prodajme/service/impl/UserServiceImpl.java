@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
         boolean passwordMatches = passwordEncoder.matches(password, user.getPassword());
 
-        // Backward compatibility for legacy seeded users with plaintext passwords.
+        //Ako u bazi postoji sifra koja nije enkriptovana
         if (!passwordMatches && password.equals(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);

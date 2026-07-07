@@ -22,8 +22,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductRepository productRepository;
 
     public ReviewServiceImpl(ReviewRepository reviewRepository,
-                             UserRepository userRepository,
-                             ProductRepository productRepository) {
+            UserRepository userRepository,
+            ProductRepository productRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
@@ -49,13 +49,13 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         User reviewer = userRepository.findById(reviewerId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         User reviewed = userRepository.findById(reviewedId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         Review review = new Review();
         review.setReviewer(reviewer);
