@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import rs.ac.bg.fon.prodajme.dto.SendAdsReportRequestDto;
 import rs.ac.bg.fon.prodajme.dto.ProductDto;
 import rs.ac.bg.fon.prodajme.mapper.ProductMapper;
 import rs.ac.bg.fon.prodajme.response.ApiResponse;
@@ -98,6 +99,12 @@ public class ProductController {
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Integer id) {
         productService.delete(id);
         return ResponseEntity.ok(ApiResponseFactory.success("Oglas je uspešno obrisan"));
+    }
+
+    @PostMapping("/report/email")
+    public ResponseEntity<ApiResponse> sendAdsReportToEmail(@RequestBody SendAdsReportRequestDto requestDto) {
+        productService.sendAdsReportToEmail(requestDto.getUserId());
+        return ResponseEntity.ok(ApiResponseFactory.success("Izveštaj je uspešno poslat na Vašu email adresu."));
     }
 
 }

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axiosClient from '../../api/client/axiosClient'
+import { sendAdsReportToEmail } from '../../api/auth/authApi'
 import { extractProducts } from '../../api/products/productTypes'
 import type { Product } from '../../api/products/productTypes'
 import ProductCard from '../../components/ProductCard/ProductCard'
@@ -19,6 +20,8 @@ function MyAdsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [actionError, setActionError] = useState('')
+  const [reportLoading, setReportLoading] = useState(false)
+  const [reportMessage, setReportMessage] = useState('')
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -61,17 +64,47 @@ function MyAdsPage() {
     }
   }
 
+  const handleSendReport = async () => {
+    if (!currentUser?.id) {
+      setActionError('Korisnik nije prijavljen.')
+      return
+    }
+
+    try {
+      setReportLoading(true)
+      setActionError('')
+      setReportMessage('')
+      await sendAdsReportToEmail(currentUser.id)
+      setReportMessage('Izveštaj je uspešno poslat na Vašu email adresu.')
+    } catch (caughtError) {
+      setActionError(readErrorMessage(caughtError, 'Slanje izveštaja nije uspelo. Pokušajte ponovo.'))
+    } finally {
+      setReportLoading(false)
+    }
+  }
+
   return (
     <section className={styles.page}>
       <div className={styles.header}>
         <h1>Moji oglasi</h1>
-        <Link to="/postavi-oglas" className={styles.newAdButton}>
-          Postavi oglas
-        </Link>
+        <div className={styles.headerActions}>
+          <button
+            type="button"
+            className={styles.reportButton}
+            onClick={handleSendReport}
+            disabled={reportLoading || loading || myProducts.length === 0}
+          >
+            {reportLoading ? 'Slanje...' : 'Pošalji izveštaj na mejl'}
+          </button>
+          <Link to="/postavi-oglas" className={styles.newAdButton}>
+            Postavi oglas
+          </Link>
+        </div>
       </div>
 
       {loading && <p className={styles.stateText}>Učitavanje oglasa...</p>}
       {error && <p className={styles.errorText}>{error}</p>}
+      {reportMessage && <p className={styles.successText}>{reportMessage}</p>}
       {!error && actionError && <p className={styles.errorText}>{actionError}</p>}
 
       {!loading && !error && myProducts.length > 0 && (

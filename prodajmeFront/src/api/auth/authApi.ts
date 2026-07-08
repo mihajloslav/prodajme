@@ -82,3 +82,7 @@ export const forgotPassword = async (email: string): Promise<void> => {
 export const resetPassword = async (payload: ResetPasswordPayload): Promise<void> => {
   await axiosClient.post('/api/users/reset-password', payload)
 }
+
+export const sendAdsReportToEmail = async (userId: number): Promise<void> => {
+  await axiosClient.post('/api/products/report/email', { userId })
+}

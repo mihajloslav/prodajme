@@ -12,6 +12,13 @@
   gap: 0.8rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
 .header h1 {
   margin: 0;
   font-size: clamp(1.3rem, 2.8vw, 1.9rem);
@@ -26,6 +33,23 @@
   font-size: 0.86rem;
   font-weight: 700;
   padding: 0.6rem 0.85rem;
+}
+
+.reportButton {
+  border: 1px solid #cfd8e6;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #20364e;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+}
+
+.reportButton:disabled,
+.newAdButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .grid {
@@ -136,6 +160,12 @@
   font-weight: 600;
 }
 
+.successText {
+  margin: 0;
+  color: #1f7a3f;
+  font-weight: 600;
+}
+
 @media (max-width: 760px) {
   .actions {
     grid-template-columns: 1fr;
@@ -146,7 +176,19 @@
     flex-direction: column;
   }
 
+  .headerActions {
+    width: 100%;
+  }
+
   .newAdButton {
     text-align: center;
+  }
+
+  .reportButton {
+    width: 100%;
+  }
+
+  .newAdButton {
+    width: 100%;
   }
 }

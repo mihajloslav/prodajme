@@ -23,4 +23,6 @@ public interface ProductService {
     Product update(Integer id, Product product, Integer userId, Integer categoryId);
 
     void delete(Integer id);
+
+    void sendAdsReportToEmail(Integer userId);
 }
