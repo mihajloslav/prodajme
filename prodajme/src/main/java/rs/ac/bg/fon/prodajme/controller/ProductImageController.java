@@ -41,7 +41,7 @@ public class ProductImageController {
                 .map(ProductImageMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Product images fetched successfully", Map.of("images", images)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Slike oglasa su uspešno učitane", Map.of("images", images)));
     }
 
     @PostMapping("/product/{productId}")
@@ -50,7 +50,7 @@ public class ProductImageController {
                 productImageService.addImage(productId, imageDto.getImageUrl())
         );
 
-        ApiResponse response = ApiResponseFactory.created("Product image added successfully", Map.of("image", savedImage));
+        ApiResponse response = ApiResponseFactory.created("Slika oglasa je uspešno dodata", Map.of("image", savedImage));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -62,13 +62,13 @@ public class ProductImageController {
                 productImageService.addImage(productId, imageUrl)
         );
 
-        ApiResponse response = ApiResponseFactory.created("Product image uploaded successfully", Map.of("image", savedImage));
+        ApiResponse response = ApiResponseFactory.created("Slika oglasa je uspešno otpremljena", Map.of("image", savedImage));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{imageId}")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable Integer imageId) {
         productImageService.deleteImage(imageId);
-        return ResponseEntity.ok(ApiResponseFactory.success("Product image deleted successfully"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Slika oglasa je uspešno obrisana"));
     }
 }

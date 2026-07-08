@@ -34,7 +34,7 @@ public class MessageController {
             .map(MessageMapper::toDto)
             .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Received messages fetched successfully", Map.of("messages", messages)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Primljene poruke su uspešno učitane", Map.of("messages", messages)));
     }
 
     @GetMapping("/sent/{senderId}")
@@ -44,7 +44,7 @@ public class MessageController {
             .map(MessageMapper::toDto)
             .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Sent messages fetched successfully", Map.of("messages", messages)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Poslate poruke su uspešno učitane", Map.of("messages", messages)));
     }
 
     @PostMapping
@@ -58,7 +58,7 @@ public class MessageController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.created("Message sent successfully", Map.of("message", savedMessage));
+        ApiResponse response = ApiResponseFactory.created("Poruka je uspešno poslata", Map.of("message", savedMessage));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

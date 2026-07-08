@@ -34,7 +34,7 @@ public class ReviewController {
                 .map(ReviewMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Reviews fetched successfully", Map.of("reviews", reviews)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Recenzije su uspešno učitane", Map.of("reviews", reviews)));
     }
 
     @GetMapping("/product/{productId}")
@@ -44,7 +44,7 @@ public class ReviewController {
             .map(ReviewMapper::toDto)
             .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Reviews fetched successfully", Map.of("reviews", reviews)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Recenzije su uspešno učitane", Map.of("reviews", reviews)));
     }
 
     @PostMapping
@@ -59,7 +59,7 @@ public class ReviewController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.created("Review created successfully", Map.of("review", savedReview));
+        ApiResponse response = ApiResponseFactory.created("Recenzija je uspešno kreirana", Map.of("review", savedReview));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

@@ -31,12 +31,12 @@ public class CityController {
                 .map(CityMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Cities fetched successfully", Map.of("cities", cities)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Gradovi su uspešno učitani", Map.of("cities", cities)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getCityById(@PathVariable Integer id) {
         CityDto city = CityMapper.toDto(cityService.findById(id));
-        return ResponseEntity.ok(ApiResponseFactory.success("City fetched successfully", Map.of("city", city)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Grad je uspešno učitan", Map.of("city", city)));
     }
 }

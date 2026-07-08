@@ -35,7 +35,7 @@ public class FavoriteController {
             .map(FavoriteMapper::toDto)
             .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Favorites fetched successfully", Map.of("favorites", favorites)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Omiljeni oglasi su uspešno učitani", Map.of("favorites", favorites)));
     }
 
     @PostMapping
@@ -44,14 +44,14 @@ public class FavoriteController {
             favoriteService.addToFavorites(favoriteDto.getUser().getId(), favoriteDto.getProduct().getId())
         );
 
-        ApiResponse response = ApiResponseFactory.created("Product added to favorites", Map.of("favorite", savedFavorite));
+        ApiResponse response = ApiResponseFactory.created("Oglas je uspešno dodat u omiljene", Map.of("favorite", savedFavorite));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/user/{userId}/product/{productId}")
     public ResponseEntity<ApiResponse> removeFromFavorites(@PathVariable Integer userId, @PathVariable Integer productId) {
         favoriteService.removeFromFavorites(userId, productId);
-        return ResponseEntity.ok(ApiResponseFactory.success("Product removed from favorites"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglas je uspešno uklonjen iz omiljenih"));
     }
 
 }

@@ -31,12 +31,12 @@ public class CategoryController {
                 .map(CategoryMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Categories fetched successfully", Map.of("categories", categories)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Kategorije su uspešno učitane", Map.of("categories", categories)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Integer id) {
         CategoryDto category = CategoryMapper.toDto(categoryService.findById(id));
-        return ResponseEntity.ok(ApiResponseFactory.success("Category fetched successfully", Map.of("category", category)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Kategorija je uspešno učitana", Map.of("category", category)));
     }
 }

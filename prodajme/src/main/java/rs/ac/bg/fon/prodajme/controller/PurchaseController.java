@@ -34,13 +34,13 @@ public class PurchaseController {
                 .map(PurchaseMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Purchases fetched successfully", Map.of("purchases", purchases)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Kupovine su uspešno učitane", Map.of("purchases", purchases)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getPurchaseById(@PathVariable Integer id) {
         PurchaseDto purchase = PurchaseMapper.toDto(purchaseService.findById(id));
-        return ResponseEntity.ok(ApiResponseFactory.success("Purchase fetched successfully", Map.of("purchase", purchase)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Kupovina je uspešno učitana", Map.of("purchase", purchase)));
     }
 
     @PostMapping
@@ -53,7 +53,7 @@ public class PurchaseController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.created("Purchase created successfully", Map.of("purchase", savedPurchase));
+        ApiResponse response = ApiResponseFactory.created("Kupovina je uspešno kreirana", Map.of("purchase", savedPurchase));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

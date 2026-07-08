@@ -28,6 +28,8 @@ public final class UserMapper {
         return dto;
     }
 
+    //sprečava beskonačno ugnježdavanje i kružne reference
+    //smanjuje količinu podataka u JSON odgovoru
     public static UserDto toNestedDto(User entity) {
         if (entity == null) {
             return null;

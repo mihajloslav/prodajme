@@ -24,6 +24,7 @@ import rs.ac.bg.fon.prodajme.service.JwtService;
 
 import java.util.List;
 import java.util.Map;
+import rs.ac.bg.fon.prodajme.entity.User;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,13 +45,13 @@ public class UserController {
                 .map(UserMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Users fetched successfully", Map.of("users", users)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Korisnici su uspešno učitani", Map.of("users", users)));
     }
 
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Integer id) {
         UserDto user = UserMapper.toDto(userService.findById(id));
-        return ResponseEntity.ok(ApiResponseFactory.success("User fetched successfully", Map.of("user", user)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Korisnik je uspešno učitan", Map.of("user", user)));
     }
 
     @PostMapping
@@ -59,17 +60,17 @@ public class UserController {
             userService.register(UserMapper.toEntity(registerDto), registerDto.getCityId())
         );
 
-        ApiResponse response = ApiResponseFactory.created("User registered successfully", Map.of("user", savedUser));
+        ApiResponse response = ApiResponseFactory.created("Korisnik je uspešno registrovan", Map.of("user", savedUser));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto) {
-        rs.ac.bg.fon.prodajme.entity.User userEntity = userService.login(loginDto.getEmail(), loginDto.getPassword());
+        User userEntity = userService.login(loginDto.getEmail(), loginDto.getPassword());
         UserDto user = UserMapper.toDto(userEntity);
         String token = jwtService.generateToken(userEntity);
 
-        return ResponseEntity.ok(ApiResponseFactory.success("User logged in successfully", Map.of(
+        return ResponseEntity.ok(ApiResponseFactory.success("Prijava korisnika je uspešna", Map.of(
             "token", token,
             "user", user
         )));
@@ -81,13 +82,13 @@ public class UserController {
                 userService.verifyEmail(verifyEmailDto.getEmail(), verifyEmailDto.getCode())
         );
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Email verified successfully", Map.of("user", user)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Email je uspešno verifikovan", Map.of("user", user)));
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResponse> forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
         userService.forgotPassword(forgotPasswordDto.getEmail());
-        return ResponseEntity.ok(ApiResponseFactory.success("Reset password code sent successfully"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Kod za reset lozinke je uspešno poslat"));
     }
 
     @PostMapping("/reset-password")
@@ -97,7 +98,7 @@ public class UserController {
                 resetPasswordDto.getCode(),
                 resetPasswordDto.getNewPassword()
         );
-        return ResponseEntity.ok(ApiResponseFactory.success("Password reset successfully"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Lozinka je uspešno resetovana"));
     }
 
     @PutMapping("/{id:\\d+}")
@@ -106,13 +107,13 @@ public class UserController {
             userService.update(id, UserMapper.toEntity(userDto), userDto.getCity().getId())
         );
 
-        return ResponseEntity.ok(ApiResponseFactory.success("User updated successfully", Map.of("user", updatedUser)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Korisnik je uspešno ažuriran", Map.of("user", updatedUser)));
     }
 
     @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {
         userService.delete(id);
-        return ResponseEntity.ok(ApiResponseFactory.success("User deleted successfully"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Korisnik je uspešno obrisan"));
     }
 
 }

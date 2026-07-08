@@ -37,13 +37,13 @@ public class ProductController {
                 .map(ProductMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Products fetched successfully", Map.of("products", products)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglasi su uspešno učitani", Map.of("products", products)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Integer id) {
         ProductDto product = ProductMapper.toDto(productService.findById(id));
-        return ResponseEntity.ok(ApiResponseFactory.success("Product fetched successfully", Map.of("product", product)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglas je uspešno učitan", Map.of("product", product)));
     }
 
     @GetMapping("/status/{status}")
@@ -53,7 +53,7 @@ public class ProductController {
                 .map(ProductMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Products fetched successfully", Map.of("products", products)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglasi su uspešno učitani", Map.of("products", products)));
     }
 
     @GetMapping("/search")
@@ -63,7 +63,7 @@ public class ProductController {
                 .map(ProductMapper::toDto)
                 .toList();
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Products fetched successfully", Map.of("products", products)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglasi su uspešno učitani", Map.of("products", products)));
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class ProductController {
             )
         );
 
-        ApiResponse response = ApiResponseFactory.created("Product created successfully", Map.of("product", savedProduct));
+        ApiResponse response = ApiResponseFactory.created("Oglas je uspešno kreiran", Map.of("product", savedProduct));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -91,13 +91,13 @@ public class ProductController {
             )
         );
 
-        return ResponseEntity.ok(ApiResponseFactory.success("Product updated successfully", Map.of("product", updatedProduct)));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglas je uspešno ažuriran", Map.of("product", updatedProduct)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Integer id) {
         productService.delete(id);
-        return ResponseEntity.ok(ApiResponseFactory.success("Product deleted successfully"));
+        return ResponseEntity.ok(ApiResponseFactory.success("Oglas je uspešno obrisan"));
     }
 
 }
