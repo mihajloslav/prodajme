@@ -68,9 +68,9 @@ function HomePage({ categories }: HomePageProps) {
             <Link to="/postavi-oglas" className={styles.ctaButton}>
               Postavite oglas
             </Link>
-            <Link to="/register" className={styles.linkButton}>
+            {/*<Link to="/register" className={styles.linkButton}>
               Kako funkcioniše?
-            </Link>
+            </Link>*/}
           </div>
         </div>
 
@@ -80,7 +80,7 @@ function HomePage({ categories }: HomePageProps) {
       <section className={styles.categorySection}>
         <div className={styles.sectionHeader}>
           <h2>Popularne kategorije</h2>
-          <p>Pogledajte sve</p>
+          {/*<p>Pogledajte sve</p>*/}
         </div>
         <div className={styles.categoryGrid}>
           {popularCategories.map((category) => (
