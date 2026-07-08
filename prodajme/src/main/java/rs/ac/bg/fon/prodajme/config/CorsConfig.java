@@ -9,10 +9,29 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+
+        // Dozvoljava CORS zahteve za sve rute u aplikaciji
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+
+                // Frontend aplikacije kojima je dozvoljen pristup backendu
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://localhost:3000"
+                )
+
+                // Dozvoljene HTTP metode
+                .allowedMethods(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
+
+                // Dozvoljava sva HTTP zaglavlja
                 .allowedHeaders("*")
+
+                // Ne dozvoljava slanje kolačića i drugih kredencijala
                 .allowCredentials(false);
     }
 }

@@ -26,11 +26,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
+                // Podešavanje CORS konfiguracije
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Isključuje CSRF zaštitu jer aplikacija koristi JWT autentifikaciju
+                .csrf(csrf -> csrf.disable())
+                // Aplikacija ne koristi HTTP sesije, već JWT token
+                .sessionManagement(session
+                        -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // Definisanje pravila pristupa API rutama
+                .authorizeHttpRequests(auth -> auth
+                // Javno dostupne rute
                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/verify").permitAll()
@@ -40,22 +48,50 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cities/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                // Sve ostale rute zahtevaju prijavljenog korisnika
                 .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                )
+                // JWT filter se izvršava pre standardnog Spring filtera za prijavu
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Dozvoljeni frontend serveri
+        configuration.setAllowedOrigins(
+                Arrays.asList(
+                        "http://localhost:5173",
+                        "http://localhost:3000"
+                )
+        );
+
+        // Dozvoljene HTTP metode
+        configuration.setAllowedMethods(
+                Arrays.asList(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
+        );
+
+        // Dozvoljava sva zaglavlja
         configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        // Ne dozvoljava korišćenje kolačića i drugih kredencijala
         configuration.setAllowCredentials(false);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        // Primena CORS pravila na sve rute
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }

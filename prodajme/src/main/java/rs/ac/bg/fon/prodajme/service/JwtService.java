@@ -15,41 +15,52 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    private static final String SECRET_STRING = "thisisaverylongandsecuresecretkeyusedforprodajmejwtgenerationthisisaverylongandsecuresecretkeyusedforprodajmejwtgeneration";
-    private static final long EXPIRATION_TIME = 86400000;//24 sata
+    // Tajni ključ koji se koristi za potpisivanje JWT tokena
+    private static final String SECRET_STRING =
+            "thisisaverylongandsecuresecretkeyusedforprodajmejwtgenerationthisisaverylongandsecuresecretkeyusedforprodajmejwtgeneration";
+
+    // Token važi 24 sata
+    private static final long EXPIRATION_TIME = 86400000;
 
     private final SecretKey key;
 
     public JwtService() {
+        // Kreiranje SecretKey objekta na osnovu zadatog tajnog ključa
         this.key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(User user) {
+
+        // Podaci koji će biti sačuvani u JWT tokenu
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId());
         claims.put("role", user.getRole().name());
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(user.getEmail())
-                .issuedAt(new Date())
+                .subject(user.getEmail())               // Email predstavlja identitet korisnika
+                .issuedAt(new Date())                  // Vreme kreiranja tokena
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key)
+                .signWith(key)                         // Digitalno potpisivanje tokena
                 .compact();
     }
 
+    // Vraća email korisnika iz JWT tokena
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
+    // Vraća ulogu korisnika iz JWT tokena
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }
 
+    // Vraća ID korisnika iz JWT tokena
     public Integer extractUserId(String token) {
         return extractAllClaims(token).get("userId", Integer.class);
     }
 
+    // Proverava da li je token validan i da li nije istekao
     public boolean isTokenValid(String token) {
         try {
             Claims claims = extractAllClaims(token);
@@ -59,9 +70,10 @@ public class JwtService {
         }
     }
 
+    // Čita sve podatke (claims) iz JWT tokena
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(key)          // Provera digitalnog potpisa
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
